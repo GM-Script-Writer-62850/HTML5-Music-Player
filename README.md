@@ -14,7 +14,7 @@ All files should have a file extension (eg .png, .mp3, .ogg, etc)<br/>
 This uses 3 icons from the apache web server, if you are using a different web service, grab these icons and save them as the following:<br/>
 <a href="http://www.apache.org/icons/open.folder.png" target="_blank">/icons/open.folder.png</a><br/>
 <a href="http://www.apache.org/icons/folder.png" target="_blank">/icons/folder.png</a><br/>
-<a href="http://www.apache.org/icons/sound2.png" target="_blank">/icons/sound2.png</a>
+<a href="http://www.apache.org/icons/sound2.png" target="_blank">/icons/sound2.png</a><br/>
 
-
+Overview:<br/>
 <img src="https://raw.githubusercontent.com/GM-Script-Writer-62850/HTML5-Music-Player/master/overview.png"/>
