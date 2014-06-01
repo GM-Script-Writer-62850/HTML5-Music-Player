@@ -18,3 +18,15 @@ This uses 3 icons from the apache web server, if you are using a different web s
 
 Overview:<br/>
 <img src="https://raw.githubusercontent.com/GM-Script-Writer-62850/HTML5-Music-Player/master/overview.png"/>
+
+Keyboard shortcuts:<br/>
+<pre>
+pause          - spacebar
+volume up      - plus on the number keypad
+volume down    - minus on the number keypad
+next song      - left arrow key
+previous song  - right arrow key
+skip 5s        - up arrow key
+rewind 5s      - down arrow key
+toggle shuffle - s
+toggle repeat  - r</pre>
