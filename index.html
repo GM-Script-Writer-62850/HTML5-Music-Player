@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Music Player</title>
+		<link href="/icons/sound2.png" type="image/png" rel="shortcut icon">
+		<link href="player.css" type="text/css" rel="stylesheet"/>
+		<script src="playlist.php" type="application/javascript"></script>
+		<script src="player.js" type="application/javascript"></script>
+	</head>
+	<body onload="init();">
+		<div id="player">
+			<div>
+				<h4 id="title"></h4>
+				<input id="back" type="button" value="|&#x25c0;&#x25c0;"/>
+				<input id="next" type="button" value="&#9654;&#9654;|"/>
+				Shuffle: <input id="shuffle" type="checkbox"/><br/>
+				Repeat: <input id="repeat" type="checkbox"/>
+				<p id="error"></p>
+			</div>
+			<img id="cover"/><br/>
+			<audio id="audio" controls>This is your browser speaking, I don't support HTML5 cause I am too old to learn new tricks.</audio>
+		</div><br/>
+		<div id="playlist"></div>
+	</body>
+</html>

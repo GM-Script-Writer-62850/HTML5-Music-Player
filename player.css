@@ -1,0 +1,118 @@
+html,body{
+	margin:0;
+	padding:0;
+}
+body{
+	background:#383838;
+	color:white;
+	font-size:16px;
+	font-family:'open sans' sans serif;
+	font-weight:400;
+	font-variant:normal;
+	font-style:normal;
+	text-align:center;
+}
+body > div{
+	border:1px solid white;
+	border-radius:5px;
+	display:inline-block;
+}
+#player{
+	padding:10px;
+	text-align:right;
+	margin:10px 0;
+	width:300px;
+}
+#player > div{
+	width:195px;
+	display:inline-block;
+	text-align:right;
+	float:right;
+}
+#player #cover{
+	width:100px;
+	height:100px;
+	background:white;
+	border-radius:5px;
+	margin-bottom:5px;
+	float:left;
+}
+#player #title{
+	margin:0;
+	display:inline-block;
+	text-align:center;
+	width:195px;
+	word-wrap:break-word;
+}
+#player #back,
+#player #next{
+	float:left;
+	margin:9px 5px 0 0;
+	font-family:Arial;
+	height:25px;
+	width:47px;
+}
+#player #error{
+	margin:0;
+	font-style:italic;
+	color:red;
+	font-size:small;
+	text-align:center;
+	display:none;
+}
+#player #error.open{
+	display:block;
+}
+#player audio{
+	width:100%;
+	max-height:30px;
+	display:inline-block;
+	font-size:small;
+	text-align:center;
+}
+#playlist{
+	min-height:300px;
+	overflow:auto;
+	text-align:left;
+	margin-bottom:6px;
+	width:320px;
+}
+#playlist ul{
+	list-style:none;
+	padding-left:0;
+}
+#playlist > ul{
+	margin:9px 0 9px 9px;
+}
+#playlist > ul ul{
+	height:0;
+	transition: max-height 1s;
+	overflow:hidden;
+}
+#playlist li{
+	background-repeat:no-repeat;
+	padding-left:25px;
+	line-height:25px;
+}
+#playlist li:hover > ul,
+#playlist li.open > ul{
+	height:auto;
+}
+#playlist .folder{
+	background-image:url(/icons/folder.png);
+}
+#playlist .folder.open{
+	background-image:url(/icons/folder.open.png);
+}
+#playlist .song{
+	background-image:url(/icons/sound2.png);
+	cursor:pointer;
+}
+#playlist li{
+	font-style:italic;
+	color:lime;
+}
+#playlist li:not(.playing){
+	font-style:normal;
+	color:white;
+}
