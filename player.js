@@ -1,3 +1,4 @@
+"use strict";
 var music=Array(),
 	track,audio,pic,title,shuffle,repeat,err,playlist,offset;
 function getId(id){
@@ -11,7 +12,7 @@ function randInt(min,max){
 	return rand;
 }
 function sendEvt(element,event){
-	evt = document.createEvent("HTMLEvents");
+	var evt = document.createEvent("HTMLEvents");
 	evt.initEvent(event, true, true );
 	return !element.dispatchEvent(evt);
 }
@@ -21,6 +22,7 @@ function extToMime(ext){
 		case "ogg":return "audio/ogg";
 		case "aac":return "audio/aac";
 		case "wav":return "audio/wave";
+		case "webm":return "audio/webm";
 		default: "audio/"+ext;
 	}
 }
@@ -125,7 +127,8 @@ function init(){
 	offset=getId('player').offsetHeight+32;
 	playlist=getId('playlist');
 	playlist.appendChild(ul);
-	populateList(libary,ul,'library/');// Folder containing music
+	sendEvt(window,'resize');
+	populateList(library['music'],ul,library['path']);
 	config=config!=null?JSON.parse(config):{// Default player settings
 		"volume":.25,
 		"track":0,
@@ -147,7 +150,6 @@ function init(){
 				next=0;
 			}
 		}
-		
 		sendEvt(music[next],'click');
 	},false);
 	getId('next').addEventListener("click",function(){
@@ -192,6 +194,19 @@ function init(){
 			"repeat":repeat.checked===true
 		}));
 	}
+	document.addEventListener('keyup',function(event){// keyboard shortcuts
+		switch(event.which){
+			case 32:audio[audio.paused?'play':'pause']();return;// spacebar
+			case 107:audio.volume=audio.volume+.1>1?1:audio.volume+.1;return;// + (num pad)
+			case 109:audio.volume=audio.volume-.1<0?0:audio.volume-.1;return;// - (num pad)
+			case 37:getId('back').click();return;// left arrow
+			case 39:getId('next').click();return;// right arrow
+			case 38:audio.currentTime+=5;return;// up arrow
+			case 40:audio.currentTime-=5;return;// down arrow
+			case 83:shuffle.checked=!shuffle.checked;return;// s
+			case 82:repeat.checked=!repeat.checked;return;// r
+		}
+	},false);
 }
 window.onresize=function(){
 	playlist.style.maxHeight=window.innerHeight-offset+'px';

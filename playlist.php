@@ -1,5 +1,8 @@
-<?php header("content-type: application/javascript"); ?>
-var libary=<?php
+<?php 
+$F='library';// Name of folder containing music
+header("content-type: application/javascript"); 
+?>
+var library=<?php
 	function tree($dir,$depth){
 		$json=new stdClass();
 		$scan=scandir($dir);
@@ -25,5 +28,5 @@ var libary=<?php
 		}
 		return $json;
 	}
-	echo json_encode(tree('library',0));
+	echo json_encode(array('music'=>tree($F,0),'path'=>"$F/"));
 ?>
