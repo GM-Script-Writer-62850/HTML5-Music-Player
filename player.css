@@ -77,22 +77,22 @@ body > div{
 	margin-bottom:6px;
 	width:320px;
 }
-#playlist ul{
-	list-style:none;
-	padding-left:0;
-}
 #playlist > ul{
 	margin:9px 0 9px 9px;
-}
-#playlist > ul ul{
-	height:0;
-	transition: max-height 1s;
-	overflow:hidden;
 }
 #playlist li{
 	background-repeat:no-repeat;
 	padding-left:25px;
 	line-height:25px;
+}
+#playlist ul{
+	list-style:none;
+	padding-left:0;
+}
+#playlist > ul ul{
+/*	transition:height 1s linear;*/
+	overflow:hidden;
+	height:0;
 }
 #playlist li:hover > ul,
 #playlist li.open > ul{
