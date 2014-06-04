@@ -138,17 +138,19 @@ function init(){
 		"repeat":false
 	};
 	audio.addEventListener("ended",function(){
+		if(repeat.checked){
+			audio.currentTime=0;
+			return audio.play();
+		}
 		var next=track;
-		if(!repeat.checked){
-			if(shuffle.checked){
-				next=randInt(0,music.length-1);
-			}
-			else if(track+1 < music.length){
-				next++;
-			}
-			else{
-				next=0;
-			}
+		if(shuffle.checked){
+			next=randInt(0,music.length-1);
+		}
+		else if(track+1 < music.length){
+			next++;
+		}
+		else{
+			next=0;
 		}
 		sendEvt(music[next],'click');
 	},false);
