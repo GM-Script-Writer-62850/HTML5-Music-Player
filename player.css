@@ -53,6 +53,9 @@ body > div{
 	width:195px;
 	word-wrap:break-word;
 }
+#player input:not([disabled]){
+	cursor:pointer;
+}
 #player #back,
 #player #next{
 	margin:9px 5px 0 0;
@@ -72,12 +75,25 @@ body > div{
 #player #error.open{
 	display:block;
 }
-#player audio{
+#player audio{ /* for IE 11 */
 	width:100%;
 	max-height:30px;
-	display:inline-block;
-	font-size:small;
-	text-align:center;
+}
+#player audio::-webkit-media-controls-play-button,
+#player audio::-webkit-media-controls-mute-button{
+	cursor:pointer;
+}
+#player audio::-webkit-media-controls-volume-slider,
+#player audio::-webkit-media-controls-timeline{
+	cursor:ew-resize;
+}
+#player audio::-webkit-media-controls-panel{
+	background-color:#272525;
+	border-radius:5px;
+}
+#player audio::-webkit-media-controls-time-remaining-display,
+#player audio::-webkit-media-controls-current-time-display{
+	color:white;
 }
 #playlist{
 	min-height:300px;
@@ -105,7 +121,7 @@ body > div{
 	overflow:hidden;
 	height:0;
 }
-#playlist li:hover > ul,
+#playlist li:hover > ul, /* This is the line that makes the folder open on mouse over */
 #playlist li.open > ul{
 	height:auto;
 }
@@ -120,7 +136,7 @@ body > div{
 	cursor:pointer;
 }
 #playlist li[played]:before{
-	content:"‎✔ ";
+	content:"\2714  ";
 	color:aqua; /* http://i.imgur.com/2pLPx59.jpg */
 	font-style:normal;
 }

@@ -12,18 +12,16 @@ function log(msg){
 	return cLog;
 }
 function randInt(min,max){
-	var rand=Math.round(Math.random()*(max-min+1)+min);
-	if(rand==max+1){
-		return min;
-	}
-	return rand;
+	max++;
+	var rand=Math.round(Math.random()*(max-min)+min);
+	return rand==max?min:rand;
 }
 function sendEvt(element,event){
 	log('Event: '+event.substr(0,1).toUpperCase()+event.substr(1)+' on #'+element.id);
-	element.dispatchEvent(new Event(event));
-	/*var evt = document.createEvent("HTMLEvents");
+	//element.dispatchEvent(new Event(event));//This does not work in IE11
+	var evt = document.createEvent("HTMLEvents");
 	evt.initEvent(event, true, true );
-	return !element.dispatchEvent(evt);*/
+	return !element.dispatchEvent(evt);
 }
 function extToMime(ext){
 	log('File Extension: '+ext);
@@ -57,6 +55,7 @@ function reloadUnPlayed(init){
 		}
 		i++;
 	}
+	repeat.parentNode.title="Played: 0/"+music.length;
 }
 function populateList(arr,e,dir){
 	var li,i,x,cover;
@@ -201,6 +200,7 @@ function init(){
 				music[track].setAttribute('played','yes');
 				if(indx>-1){
 					unPlayed.splice(indx,1);
+					repeat.parentNode.title="Played: "+(music.length-unPlayed.length)+"/"+music.length;
 				}
 				else{
 					log('Said track was played already');
@@ -283,6 +283,7 @@ function init(){
 	shuffle.checked=config["shuffle"];
 	loop.checked=config["loop"];
 	repeat.checked=config["repeat"];
+	repeat.parentNode.title="Played: "+(music.length-unPlayed.length)+"/"+music.length;
 	if(loop.checked){
 		repeat.disabled=true;
 		shuffle.disabled=true;
