@@ -1,8 +1,21 @@
 "use strict";
-var music=Array(),
-	cLog=false,// show messages in brower console
-	hst={"log":[],"indx":0},
-	track,audio,pic,title,TITLE,shuffle,repeat,loop,err,playlist,offset,unPlayed;
+var track,audio,pic,title,TITLE,shuffle,repeat,loop,err,playlist,offset,unPlayed,
+	cLog=false,// Show messages in brower console
+	music=Array(),
+	hst={
+		"log":[],
+		"indx":0,
+		"nav":false,
+		"add":function(){
+			var trim=hst.log.length;
+			log('Add track '+track+' to history');
+			hst.log.push(track);
+			hst.log=hst.log.slice(music.length*-1);
+			if(hst.indx>hst.log.length)
+				hst.indx=hst.log.length;
+			return trim==hst.log.length;
+		}
+	};
 function getId(id){
 	return document.getElementById(id);
 }
@@ -57,6 +70,35 @@ function reloadUnPlayed(init){
 	}
 	repeat.parentNode.title="Played: 0/"+music.length;
 }
+function setPlayed(i,test){
+	if(test===false){
+		log('#'+i+' has been played');
+		music[i].setAttribute('played','yes');
+		return;
+	}
+	i=unPlayed.indexOf(i);
+	if(unPlayed.length>0){
+		log('Tracks not played: '+unPlayed.length);
+		if(audio.currentTime/audio.duration >= 0.15){// At least 15% of file was played
+			setPlayed(track,false);
+			if(i>-1){
+				unPlayed.splice(i,1);
+				repeat.parentNode.title="Played: "+(music.length-unPlayed.length)+"/"+music.length;
+			}
+			else{
+				log('Said track was played already');
+			}
+		}
+		else{
+			log('Tack #'+i+' was Skipped');
+			i++;
+		}
+	}
+	else{
+		reloadUnPlayed(false);
+	}
+	return i==unPlayed.length?0:i;
+}
 function populateList(arr,e,dir){
 	var li,i,x,cover;
 	for(i in arr){
@@ -98,6 +140,12 @@ function populateList(arr,e,dir){
 				li.setAttribute('cover',cover?dir+cover:'/icons/sound2.png');
 				li.addEventListener('click',function(event){
 					event.stopPropagation();
+					if(hst.nav){// manual navigation
+						hst.add();
+						hst.indx=hst.log.length;
+						setPlayed(track,true);
+					}
+					hst.nav=true;
 					var file=this.getAttribute('file'),
 						cover=this.getAttribute('cover'),
 						s=document.createElement('source'),
@@ -180,45 +228,23 @@ function init(){
 		reloadUnPlayed(true);
 	}
 	if(unPlayed.length!=music.length){
-		var i,id;
-		for(i in music){
-			id=parseInt(music[i].id);
-			if(unPlayed.indexOf(id)==-1){
-				log('#'+id+' has been played');
-				music[i].setAttribute('played','yes');
+		for(var i in music){
+			i=parseInt(music[i].id);
+			if(unPlayed.indexOf(i)==-1){
+				setPlayed(i,false);
 			}
 		}
 	}
 	audio.addEventListener("ended",function(){
 		log('End Track: #'+track);
 		var next=track,
-			indx=unPlayed.indexOf(next);
-		if(unPlayed.length>0){
-			log('Tracks not played: '+unPlayed.length);
-			if(audio.currentTime/audio.duration >= 0.15){ // At least 15% of file was played
-				log('Tack #'+track+' was Played');
-				music[track].setAttribute('played','yes');
-				if(indx>-1){
-					unPlayed.splice(indx,1);
-					repeat.parentNode.title="Played: "+(music.length-unPlayed.length)+"/"+music.length;
-				}
-				else{
-					log('Said track was played already');
-				}
-			}
-			else{
-				log('Tack #'+track+' was Skipped');
-				indx++;
-			}
-		}
-		else{
-			reloadUnPlayed(false);
-		}
+			indx=setPlayed(track,true);
 		if(loop.checked){
 			log('Track Loop');
 			audio.currentTime=0;
 			return audio.play();
 		}
+		hst.nav=false;
 		hst.indx++;
 		if(hst.log.length>hst.indx){
 			log('Back feature was used: '+hst.indx+'/'+hst.log.length);
@@ -226,10 +252,7 @@ function init(){
 			return true;
 		}
 		else if(hst.indx>hst.log.length){
-			hst.log.push(track);
-			hst.log=hst.log.slice(music.length*-1);
-			if(hst.indx>hst.log.length)
-				hst.indx=hst.log.length;
+			hst.add();
 		}
 		if(shuffle.checked){
 			log('Shuffle Tracks');
@@ -270,15 +293,22 @@ function init(){
 			return alert('Out of History');
 		}
 		if(hst.indx==hst.log.length){
-			hst.log.push(track);
-			if(hst.log.length>music.length)
+			if(hst.add()){
 				hst.indx--;
-			log('Add this track to history');
-			hst.log=hst.log.slice(music.length*-1);
+			}
 		}
 		hst.indx--;
 		log('History: '+hst.indx+' - '+JSON.stringify(hst.log));
+		hst.nav=false;
 		sendEvt(music[hst.log[hst.indx]],'click');
+	},false);
+	getId('wipe').addEventListener("click",function(){
+		if(music.length==unPlayed.length){
+			return alert('No tracks have been played!');
+		}
+		if(confirm("All tracks will be marked as unplayed.\n\nTracks marked as played: "+(music.length-unPlayed.length)+" of "+music.length)){
+			reloadUnPlayed(false);
+		}
 	},false);
 	shuffle.checked=config["shuffle"];
 	loop.checked=config["loop"];
@@ -343,6 +373,21 @@ function init(){
 		if(event.which==32)
 			event.stopPropagation();
 	},false);
+	hst.debug=getId('debugHst');// Potential use as play history viewer
+	if(hst.debug){
+		hst.style.width='320px';
+		hst.debugHst=function(e){
+			e.textContent='hst.indx = '+hst.indx;
+			for(var i in hst.log){
+				e.appendChild(document.createElement('br'));
+				e.appendChild(document.createTextNode(i+' : '+music[hst.log[i]].textContent));
+			}
+			setTimeout(function(){hst.debugHst(e);},100);
+		}
+		cLog=true;
+		hst.debugHst(hst.debug);
+		playlist.setAttribute('style','max-height:60px;min-height:30px;');// Let me see what I'm doing
+	}
 }
 window.onresize=function(){
 	playlist.style.maxHeight=window.innerHeight-offset+'px';

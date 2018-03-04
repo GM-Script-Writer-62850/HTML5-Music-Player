@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title id="pageTitle">Music Player</title>
 		<link href="/icons/sound2.png" type="image/png" rel="shortcut icon">
 		<link href="player.css" type="text/css" rel="stylesheet"/>
@@ -15,6 +16,7 @@
 				<h4 id="title"></h4>
 				<input id="back" type="button" value="|&#x25c0;&#x25c0;"/>
 				<input id="next" type="button" value="&#9654;&#9654;|"/>
+				<input id="wipe" type="button" value="Clear Played List">
 				<p id="error"></p>
 			</div>
 			<img id="cover"/><br/>
@@ -26,5 +28,6 @@
 			</div>
 		</div><br/>
 		<div id="playlist"></div>
+		<!--<br/><div id="debugHst"></div>-->
 	</body>
 </html>

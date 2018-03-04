@@ -25,10 +25,7 @@ Shuffle: Play tracks at random instead of in order.<br/>
 Repeat: Allow tracks to repeat (When un-checked every track much be played once before it can be played again; saved between sessions; Played tracks are marked as &#x2714; in the playlist)<br/>
 Next/Back: This feature now uses a play history log, this is not saved between sessions (max length is the size of your playlist)<br/>
 Note: Changing the number of tracks in the playlist will reset session data<br/>
-Note: Pressing next will not mark a track as played unless it is at least 15% complete<br/>
-
-Known Bugs:<br/>
-When navagating away from tracks via the playlist will bypass history and will not mark the previous track as played (Maybe I will fix this one day, knowing it exist will bug me)
+Note: Tracks will not mark a track as played unless it is at least 15% complete<br/>
 
 Keyboard shortcuts:<br/>
 <pre>

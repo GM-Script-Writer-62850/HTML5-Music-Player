@@ -56,13 +56,15 @@ body > div{
 #player input:not([disabled]){
 	cursor:pointer;
 }
+#player input[type="button"]{
+	font-family:Arial;
+	height:25px;
+	font-size:16px;
+}
 #player #back,
 #player #next{
-	margin:9px 5px 0 0;
-	font-family:Arial;
-	height:35px;
+	margin:6px 0 6px;
 	width:80px;
-	font-size:large;
 }
 #player #error{
 	margin:0;
