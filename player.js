@@ -375,7 +375,7 @@ function init(){
 	},false);
 	hst.debug=getId('debugHst');// Potential use as play history viewer
 	if(hst.debug){
-		hst.style.width='320px';
+		hst.debug.style.width='320px';
 		hst.debugHst=function(e){
 			e.textContent='hst.indx = '+hst.indx;
 			for(var i in hst.log){

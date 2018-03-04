@@ -24,6 +24,7 @@ Loop: Play the current track over and over again.<br/>
 Shuffle: Play tracks at random instead of in order.<br/>
 Repeat: Allow tracks to repeat (When un-checked every track much be played once before it can be played again; saved between sessions; Played tracks are marked as &#x2714; in the playlist)<br/>
 Next/Back: This feature now uses a play history log, this is not saved between sessions (max length is the size of your playlist)<br/>
+Note: Clicking on a track after using the back feature will bump your historic playback to the present, for example say you hit back 5 times<sup>(history at -5)</sup> and you click a track, your history will be bumped back up to the present<sup>(history at 0)</sup><br/>
 Note: Changing the number of tracks in the playlist will reset session data<br/>
 Note: Tracks will not mark a track as played unless it is at least 15% complete<br/>
 
