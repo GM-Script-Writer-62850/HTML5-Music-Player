@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Music Player</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title id="pageTitle">Music Player</title>
 		<link href="/icons/sound2.png" type="image/png" rel="shortcut icon">
 		<link href="player.css" type="text/css" rel="stylesheet"/>
 		<script src="playlist.php" type="application/javascript"></script>
@@ -10,16 +11,19 @@
 	</head>
 	<body onload="init();">
 		<div id="player">
-			<div>
+			<div class="ctrl">
 				<h4 id="title"></h4>
 				<input id="back" type="button" value="|&#x25c0;&#x25c0;"/>
 				<input id="next" type="button" value="&#9654;&#9654;|"/>
-				Shuffle: <input id="shuffle" type="checkbox"/><br/>
-				Repeat: <input id="repeat" type="checkbox"/>
 				<p id="error"></p>
 			</div>
 			<img id="cover"/><br/>
 			<audio id="audio" controls>This is your browser speaking, I don't support HTML5 cause I am too old to learn new tricks.</audio>
+			<div class="opts">
+				<span>Shuffle: <input id="shuffle" type="checkbox"/></span>
+				<span>Repeat: <input id="repeat" type="checkbox"/></span>
+				<span>Loop: <input id="loop" type="checkbox"/></span>
+			</div>
 		</div><br/>
 		<div id="playlist"></div>
 	</body>

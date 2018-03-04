@@ -29,4 +29,5 @@ previous song  - right arrow key
 skip 5s        - up arrow key
 rewind 5s      - down arrow key
 toggle shuffle - s
-toggle repeat  - r</pre>
+toggle repeat  - r
+toggle loop    - l</pre>
