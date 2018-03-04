@@ -19,15 +19,23 @@ This uses 3 icons from the apache web server, if you are using a different web s
 Overview:<br/>
 <img src="https://raw.githubusercontent.com/GM-Script-Writer-62850/HTML5-Music-Player/master/overview.png"/>
 
+Features:<br/>
+Loop: Play the current track over and over again.<br/>
+Shuffle: Play tracks at random instead of in order.<br/>
+Repeat: Allow tracks to repeat (When un-checked every track much be played once before it can be played again; saved between sessions;Played tracks are marked as &#x2714; in the playlist)<br/>
+Next/Back: This feature now uses a play history log, this is not saved between sessions (max length is the size of your playlist)<br/>
+Note: Changing the number of tracks in the playlist will reset session data<br/>
+Note: Pressing next will not mark a track as played unless it is at least 15% complete
+
 Keyboard shortcuts:<br/>
 <pre>
-pause          - spacebar
-volume up      - plus on the number keypad
-volume down    - minus on the number keypad
-next song      - left arrow key
-previous song  - right arrow key
-skip 5s        - up arrow key
-rewind 5s      - down arrow key
-toggle shuffle - s
-toggle repeat  - r
-toggle loop    - l</pre>
+pause          - Spacebar
+volume up      - Plus on the number keypad
+volume down    - Minus on the number keypad
+next song      - Left arrow key
+previous song  - Right arrow key
+skip 5s        - Up arrow key
+rewind 5s      - Down arrow key
+toggle shuffle - S key
+toggle repeat  - R key
+toggle loop    - L key</pre>
