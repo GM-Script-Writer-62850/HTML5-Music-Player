@@ -120,7 +120,7 @@ body > div{
 	color:white;
 }
 #playlist{
-	min-height:295px;
+	min-height:300px;
 	overflow:auto;
 	text-align:left;
 	margin-bottom:6px;
@@ -130,6 +130,7 @@ body > div{
 }
 #playlist li{
 	background-repeat:no-repeat;
+	background-position:left 2px;
 	padding-left:25px;
 	line-height:25px;
 }
@@ -147,6 +148,10 @@ body > div{
 #playlist li:hover > ul, /* This is the line that makes the folder open on mouse over */
 #playlist li.open > ul{
 	height:auto;
+}
+#playlist .back{
+	background-image:url(/icons/small/back.png), url(/icons/folder.png);
+	background-position:1px 7px,left 2px;
 }
 #playlist .folder{
 	background-image:url(/icons/folder.png);

@@ -9,7 +9,8 @@ Next/Back: This feature now uses a play history log, this is not saved between s
 Note: Clicking on a track after using the back feature will bump your historic playback to the present, for example say you hit back 5 times<sup>(history at -5)</sup> and you click a track, your history will be bumped back up to the present<sup>(history at 0)</sup><br/>
 Note: Changing the number of tracks in the playlist will reset session data<br/>
 Note: Tracks will not mark a track as played unless it is at least 15% complete<br/>
-Note: ID3 (meta data from audio files) data is not displayed on very low screen widths (tiny smart phone)
+Note: ID3 (meta data from audio files) data is not displayed on very low screen widths (tiny smart phone)<br/>
+Note: Playback can be restricted to a single folder by double clicking it
 
 Overview:<br/>
 <img src="https://raw.githubusercontent.com/GM-Script-Writer-62850/HTML5-Music-Player/master/overview.png"/>
@@ -38,7 +39,8 @@ Cover images should be named cover (not case sensitive), they should be in png, 
 Cover images are optional<br/>
 Any file not called cover will be treated as a audio file<br/>
 All files should have a file extension (eg .png, .mp3, .ogg, etc)<br/>
-This uses 3 icons from the apache web server, if you are using a different web service, grab these icons and save them as the following:<br/>
+This uses 4 icons from the apache web server, if you are using a different web service, grab these icons and save them as the following:<br/>
 <a href="http://www.apache.org/icons/open.folder.png" target="_blank">/icons/open.folder.png</a><br/>
 <a href="http://www.apache.org/icons/folder.png" target="_blank">/icons/folder.png</a><br/>
 <a href="http://www.apache.org/icons/sound2.png" target="_blank">/icons/sound2.png</a><br/>
+<a href="http://www.apache.org/icons/small/back.png" target="_blank">/icons/small/back.png</a>

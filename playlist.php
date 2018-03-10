@@ -37,8 +37,10 @@ var library=<?php
 		$json=new stdClass();
 		$scan=scandir($dir);
 		$files=array();
+		$exclude=array('txt','rtf','m3u','pls','m3u8','wpl','asx','xml','asx','bio','fpl','kpl','pla','plc','aimppl','smil','vlc','xspf','zpl'); // https://en.wikipedia.org/wiki/Playlist#Types_of_playlist_files
 		foreach($scan as $f){
-			if(substr($f,0,1)=="."||substr($f,-4)=='.txt'){// Skip text files and hidden files (UNIX defination)
+			if(substr($f,0,1)=="."||// Skip hidden files (UNIX defination)
+				in_array(strtolower(substr($f,strrpos($f,'.')+1)),$exclude)){// Skip playlist files and text file notes
 				continue;
 			}
 			if(is_dir("$dir/$f")){
@@ -78,6 +80,15 @@ var library=<?php
 	else{
 		$initGetID3=file_exists($getID3);
 		$getID3=false;
+	}
+	if(isset($_SERVER['HTTP_REFERER'])){
+		parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $REF_GET);
+		if(isset($REF_GET['folder'])){
+			$dir=$REF_GET['folder'];
+			if(is_dir("$F/$dir")&&array_search('..',explode('/',$dir))===false){
+				$F="$F/$dir";
+			}
+		}
 	}
 	echo json_encode(array(
 		'music'=>tree($F,0,$getID3),

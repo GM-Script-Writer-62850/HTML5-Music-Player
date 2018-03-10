@@ -1,6 +1,6 @@
 "use strict";
 var track,audio,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,
-	log=false,// Show messages in brower console
+	log=true,// Show messages in brower console
 	music=Array(),
 	hst={
 		"log":[],
@@ -117,6 +117,7 @@ function populateList(arr,e,dir){
 			log('Found Folder:',i);
 			li=document.createElement('li');
 			li.className="folder";
+			li.setAttribute('path',dir+i);
 			li.textContent=i;
 			e.appendChild(li);
 			li.addEventListener('click',function(event){
@@ -126,6 +127,15 @@ function populateList(arr,e,dir){
 				}
 				else{
 					this.className=this.className.substr(5);
+				}
+			},false);
+			li.addEventListener('dblclick',function(event){
+				event.stopPropagation();
+				var p=this.getAttribute('path');
+				p=p.substr(p.indexOf('/')+1);
+				if(confirm('Only play from:\n\t'+p)){
+					// Yes, it is possible to accomplish this via JavaScript, but this was quick and easy implementation for a feature I do not care about
+					document.location.href=document.location.pathname+'?folder='+encodeURIComponent(p);
 				}
 			},false);
 			li.appendChild(document.createElement('ul'))
@@ -180,10 +190,13 @@ function populateList(arr,e,dir){
 						id3=JSON.parse(id3);
 						applyID3(id3);
 					}
-					else if(library['id3']===true){
+					else if(library.id3===true){
 						applyID3({});
 					}
 					showError(audio.canPlayType(mime)?false:"This browser does not support "+mime.substr(mime.indexOf('/')+1).toUpperCase()+" audio.");
+					s.addEventListener('error',function(e){
+						console.error(e);
+					},false);
 					s.type=mime;
 					s.src=file;
 					audio.appendChild(s);
@@ -198,7 +211,7 @@ function populateList(arr,e,dir){
 						last.className+=' playing';
 						last=last.parentNode.parentNode;
 					}
-					if(library['id3']===true&&id3===null){
+					if(library.id3===true&&id3===null){
 						var httpRequest=new XMLHttpRequest();
 						httpRequest.onreadystatechange=function(){
 							if(httpRequest.readyState==4){
@@ -255,7 +268,19 @@ function init(){
 	log=log?console.log:function(){};
 	log('Begin Main JavaScript File');
 	var config=localStorage.getItem("HTML5_music"),
-		ul=document.createElement('ul');
+		path=library.path.split('/'),
+		ul=document.createElement('ul'),
+		base={// Default player settings
+			"volume":.25,
+			"track":0,
+			"state":false,
+			"time":0,
+			"shuffle":true,
+			"repeat":true,
+			"loop":false,
+			"tracks":0,
+			"unPlayed":[]
+		};
 	audio=getId('audio');
 	title={
 		"player":getId('title'),
@@ -273,32 +298,45 @@ function init(){
 	loop=getId('loop');
 	repeat=getId('repeat');
 	err=getId('error');
-	offset=getId('player').offsetHeight+32;
+	offset=getId('player').offsetHeight+30;//+32;
 	playlist=getId('playlist');
 	playlist.appendChild(ul);
 	sendEvt(window,'resize');
+	if(path.length>2){
+		log('Create partent directory folder');
+		var path=library.path.split('/'),
+			li=document.createElement('li');
+		li.className="back";
+		path=path.slice(1,-2);
+		path=path.join('/');
+		li.setAttribute('path',path);
+		path=path.substr(path.lastIndexOf('/')+1);
+		li.textContent=path==''?'All Music':path;
+		ul.appendChild(li);
+		li.addEventListener('click',function(event){
+			event.stopPropagation();
+			var p=this.getAttribute('path');
+			if(confirm('Play from:\n\t'+(p==''?'All Music':p))){
+				p=p==''?p:'?folder='+encodeURIComponent(p);
+				document.location.href=document.location.pathname+p;
+			}
+		},false);
+	}
 	populateList(library.music,ul,library.path);
 	if(!library.id3){
 		getId('id3').style.display='none';
 	}
-	if(config==null){
-		log('Reset config');
-		config=null;
-	}
-	config=config!=null?JSON.parse(config):{// Default player settings
-		"volume":.25,
-		"track":0,
-		"state":false,
-		"time":0,
-		"shuffle":true,
-		"repeat":true,
-		"loop":false,
-		"tracks":0,
-		"unPlayed":[]
-	};
+	config=config==null?base:JSON.parse(config);
 	log('Config Data:',config);
 	unPlayed=config.unPlayed;
-	if(unPlayed.length==0||config.tracks!=music.length){
+	if(config.tracks!=music.length){
+		log('Playlist has changed');
+		config.time=base.time;
+		config.track=base.track;
+		config.state=base.state;
+		reloadUnPlayed(true);
+	}
+	else if(unPlayed.length==0){
 		reloadUnPlayed(true);
 	}
 	if(unPlayed.length!=music.length){
@@ -309,6 +347,9 @@ function init(){
 			}
 		}
 	}
+	audio.addEventListener("error",function(){
+		console.error(arguments);
+	},false);
 	audio.addEventListener("ended",function(){
 		log('End Track:',track);
 		var next=track,
@@ -352,7 +393,7 @@ function init(){
 				next=0;
 			}
 		}
-		if(next==track){
+		if(next==track&&!!audio.childNodes[0].tagName){
 			audio.currentTime=0;
 			return audio.play();
 		}
@@ -431,22 +472,23 @@ function init(){
 		log('Session Saved');
 	}
 	document.addEventListener('keyup',function(event){// keyboard shortcuts
+		event.preventDefault();// Prevent scrolling main body
 		switch(event.which){
 			case 32:audio[audio.paused?'play':'pause']();return;// spacebar
-			case 107:audio.volume=audio.volume+.1>1?1:audio.volume+.1;return;// + (num pad)
-			case 109:audio.volume=audio.volume-.1<0?0:audio.volume-.1;return;// - (num pad)
+			case 107:audio.volume=(audio.volume+.1>1?1:audio.volume+.1);return;// + (num pad)
+			case 109:audio.volume=(audio.volume-.1<0?0:audio.volume-.1);return;// - (num pad)
 			case 37:getId('back').click();return;// left arrow
 			case 39:getId('next').click();return;// right arrow
 			case 38:audio.currentTime+=5;return;// up arrow
 			case 40:audio.currentTime-=5;return;// down arrow
-			case 83:shuffle.checked=!shuffle.checked;return;// s
+			case 83:shuffle.checked=!shuffle.checkedn;return;// s
 			case 82:repeat.checked=!repeat.checked;return;// r
 			case 76:loop.click();return;// l
 		}
+		return false;
 	},false);
-	audio.addEventListener('keyup',function(event){// for firefox
-		if(event.which==32)
-			event.stopPropagation();
+	audio.addEventListener('focus',function(event){// for firefox
+		this.blur();
 	},false);
 	hst.debug=getId('debugHst');// Potential use as play history viewer
 	if(hst.debug){
@@ -465,5 +507,5 @@ function init(){
 	}
 }
 window.onresize=function(){
-	playlist.style.maxHeight=window.innerHeight-offset+'px';
+	playlist.style.maxHeight=window.innerHeight-offset+(window.innerWidth<=320?24:0)+'px';
 }
