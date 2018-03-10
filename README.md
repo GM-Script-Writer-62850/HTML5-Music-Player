@@ -1,5 +1,5 @@
 This is a basic HTML5 music player<br/>
-This was made to be a simple music player with all the basic features a music player should haveas well as have a mobile friendly layout<br/>
+This was made to be a simple music player with all the basic features a music player should have as well as have a mobile friendly layout<br/>
 
 Features:<br/>
 Loop: Play the current track over and over again.<br/>
