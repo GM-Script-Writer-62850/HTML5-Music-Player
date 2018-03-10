@@ -39,6 +39,7 @@ function extToMime(ext){
 	switch(ext){
 		case "mp3":return "audio/mpeg";
 		case "ogg":return "audio/ogg";
+		case "oga":return "audio/ogg";
 		case "aac":return "audio/aac";
 		case "wav":return "audio/wave";
 		case "webm":return "audio/webm";
