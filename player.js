@@ -481,7 +481,7 @@ function init(){
 			case 39:getId('next').click();return;// right arrow
 			case 38:audio.currentTime+=5;return;// up arrow
 			case 40:audio.currentTime-=5;return;// down arrow
-			case 83:shuffle.checked=!shuffle.checkedn;return;// s
+			case 83:shuffle.checked=!shuffle.checked;return;// s
 			case 82:repeat.checked=!repeat.checked;return;// r
 			case 76:loop.click();return;// l
 		}
