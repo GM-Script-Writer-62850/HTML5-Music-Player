@@ -7,7 +7,6 @@ body{
 	color:white;
 	font-size:16px;
 	font-family:'open sans' sans serif;
-	font-weight:400;
 	font-variant:normal;
 	font-style:normal;
 	text-align:center;
@@ -15,51 +14,73 @@ body{
 body > div{
 	border:1px solid white;
 	border-radius:5px;
-	display:inline-block;
+	width:50%;
+	min-width:320px;
+	max-width:800px;
+	display:inline-flex;
+	align-content:stretch;
+	align-items:flex-start;
+	flex-direction:row;
+	flex-wrap:wrap;
+	justify-content:flex-start;
+	box-sizing:border-box;
 }
 #player{
 	padding:10px;
-	text-align:right;
-	margin:10px 0;
-	width:300px;
-}
-#player .ctrl{
-	width:195px;
-	display:inline-block;
 	text-align:center;
-	float:right;
+	margin:10px 0;
 }
-#player .opts{
+#player > div{
 	display:inline-block;
-	column-count:3;
+	flex:1;
+}
+#player #crl{
+	width:195px;
+}
+#player #opts{
+	display:flex;
+	flex:none;
 	width:100%;
 }
-#player .opts span{
-	display:block;
-	text-align:center;
+#player #opts span{
+	display:inline-block;
+	width:100%;
 }
 #player #cover{
 	width:100px;
 	height:100px;
 	background:white;
 	border-radius:5px;
-	margin-bottom:5px;
-	float:left;
+	margin:0 5px 5px 0;
+	align-self:auto;
 }
 #player #title{
+	width:100%;
 	margin:0;
 	display:inline-block;
 	text-align:center;
-	width:195px;
 	word-wrap:break-word;
 }
 #player input:not([disabled]){
 	cursor:pointer;
 }
-#player input[type="button"]{
+#player input[type="button"]{/* Coloring credit: http://devgrow.com/dark-button-navigation-using-css3 */
 	font-family:Arial;
-	height:25px;
-	font-size:16px;
+	height:32px;
+	font-size:17px;
+	color:#9FA8B0;
+	background-image: linear-gradient(to bottom, #3D4850 3%, #313d45 4%, #232B30 100%);
+	box-shadow:1px 1px 1px rgba(0,0,0,0.2);
+	border:1px solid #1c252b;
+	border-radius:10px;
+}
+#player input[type="button"]:hover{
+	background-image: linear-gradient(to bottom, #4C5A64 3%, #404F5A 4%, #2E3940 100%);
+	color:white;
+}
+#player input[type="button"]:active{
+	background: linear-gradient(to bottom, #20282D 3%, #252E34 51%, #222A30 100%);
+	box-shadow: 1px 1px 1px rgba(255,255,255,0.1)
 }
 #player #back,
 #player #next{
@@ -67,10 +88,11 @@ body > div{
 	width:80px;
 }
 #player #error{
+	width:100%;
+	height:30px;
 	margin:0;
-	font-style:italic;
 	color:red;
-	font-size:small;
+	font-weight:bold;
 	text-align:center;
 	display:none;
 }
@@ -98,11 +120,10 @@ body > div{
 	color:white;
 }
 #playlist{
-	min-height:300px;
+	min-height:295px;
 	overflow:auto;
 	text-align:left;
 	margin-bottom:6px;
-	width:320px;
 }
 #playlist > ul{
 	margin:9px 0 9px 9px;
@@ -116,7 +137,7 @@ body > div{
 	list-style:none;
 	padding-left:0;
 }
-#playlist > ul ul{
+#playlist > ul ul{ /* Next 3 lines make the folder open/close have a slide effect, I found it hard to use with the hover effect enabled */
 	/*transition-property:height;
 	transition-duration:1s;
 	transition-timing-function:linear;*/
@@ -149,4 +170,55 @@ body > div{
 #playlist li:not(.playing){
 	font-style:normal;
 	color:white;
+}
+@media (max-width:1150px){
+	body > div{
+		width:75%;
+	}
+}
+@media (max-width:850px){
+	body > div{
+		width:80%;
+	}
+}
+@media (max-width:800px){
+	body > div{
+		width:85%;
+	}
+}
+@media (max-width:690px){
+	body > div{
+		 width:90%;
+	}
+	#player input[type="button"]{
+		height:25px;
+		font-size:16px;
+	}
+	#id3 .year{
+		display:none;
+	}
+}
+@media (max-width:630px){
+	#player #id3{
+		display:none;
+	}
+	#player input[type="button"]{
+		height:32px;
+		font-size:17px;
+	}
+}
+@media (max-width:475px){
+	#player input[type="button"]{
+		height:25px;
+		font-size:16px;
+	}
+}
+@media (max-width:320px){
+	#player{
+		margin-top:0;
+		margin-bottom:2px;
+	}
+	#playlist{
+		margin-bottom:0;
+	}
 }

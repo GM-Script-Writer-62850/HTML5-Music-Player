@@ -7,21 +7,27 @@
 		<title id="pageTitle">Music Player</title>
 		<link href="/icons/sound2.png" type="image/png" rel="shortcut icon">
 		<link href="player.css" type="text/css" rel="stylesheet"/>
-		<script src="playlist.php" type="application/javascript"></script>
-		<script src="player.js" type="application/javascript"></script>
+		<script src="playlist.php" type="application/javascript" charset="UTF-8"></script>
+		<script src="player.js" type="application/javascript" charset="UTF-8"></script>
 	</head>
 	<body onload="init();">
 		<div id="player">
-			<div class="ctrl">
+			<img id="cover"/>
+			<div id="ctrl">
 				<h4 id="title"></h4>
 				<input id="back" type="button" value="|&#x25c0;&#x25c0;"/>
-				<input id="next" type="button" value="&#9654;&#9654;|"/>
+				<input id="next" type="button" value="&#9654;&#9654;|"/><br/>
 				<input id="wipe" type="button" value="Clear Played List">
-				<p id="error"></p>
 			</div>
-			<img id="cover"/><br/>
+			<div id="id3">
+				Title: <span id="id3_title"></span><br/>
+				Artist: <span id="id3_artist"></span><br/>
+				Album: <span id="id3_album"></span><br class="year"/>
+				<span class="year">Year:</span> <span id="id3_year" class="year"></span>
+			</div>
 			<audio id="audio" controls controlsList="nodownload">This is your browser speaking, I don't support HTML5 cause I am too old to learn new tricks.</audio>
-			<div class="opts">
+			<p id="error"></p>
+			<div id="opts">
 				<span>Shuffle: <input id="shuffle" type="checkbox"/></span>
 				<span>Repeat: <input id="repeat" type="checkbox"/></span>
 				<span>Loop: <input id="loop" type="checkbox"/></span>
