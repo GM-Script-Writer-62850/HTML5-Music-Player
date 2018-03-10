@@ -1,6 +1,6 @@
 "use strict";
 var track,audio,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,
-	log=true,// Show messages in brower console
+	log=false,// Show messages in brower console
 	music=Array(),
 	hst={
 		"log":[],
@@ -298,7 +298,7 @@ function init(){
 	loop=getId('loop');
 	repeat=getId('repeat');
 	err=getId('error');
-	offset=getId('player').offsetHeight+30;//+32;
+	offset=getId('player').offsetHeight+30;
 	playlist=getId('playlist');
 	playlist.appendChild(ul);
 	sendEvt(window,'resize');
