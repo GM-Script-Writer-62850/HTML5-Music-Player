@@ -37,6 +37,7 @@ function extToMime(ext){
 	ext=ext.toLowerCase();
 	log('File Extension:',ext);
 	switch(ext){
+		case "m4a":return "audio/mpeg";
 		case "mp3":return "audio/mpeg";
 		case "ogg":return "audio/ogg";
 		case "oga":return "audio/ogg";
