@@ -6,10 +6,25 @@ $initGetID3=false;// Send ID3 data on page load *** DO NOT USE THIS ON SLOW SERV
 	* php-getid3 is not required
 	Set $getID3 to the /path/to/getid3.php
 	The php-getid3 package will install it to: /usr/share/php/getid3/getid3.php
+	You may also get php-getid3 from here: https://sourceforge.net/projects/getid3/files/
 
 	When initGetID3 is set to true ALL id3 data will be sent at page load, this takes over 100 times longer
 	When initGetID3 is set to false the client will ask the server for id3 data if php-getid3 is installed
 */
+function processID3($data){
+	$data=$data['tags']['id3v2'];
+	if($data===null){
+		return false;
+	}
+	$tags=array('artist','album','title','year','recording_time','genre','track_number');// ID3 tags to extract
+	$out=(object)array();
+	foreach($tags as $val){
+		if(isset($data[$val])&&isset($data[$val][0])){
+			$out->{$val}=$data[$val][0];
+		}
+	}
+	return $out;
+}
 if(isset($_GET['file'])&&isset($_GET['track'])){
 	header("content-type: application/json; charset=utf-8");
 	$file=explode('/',$_GET['file']);
@@ -24,11 +39,11 @@ if(isset($_GET['file'])&&isset($_GET['track'])){
 	}
 	require_once($getID3);
 	$getID3=new getID3;
-	$getID3=$getID3->analyze($file)['tags']['id3v2'];
+	$getID3=processID3($getID3->analyze($file));
 	die(json_encode((object)array(
-		"id3"=>$getID3===null?false:$getID3,
-		"track"=>$track
-	)));
+                "id3"=>$getID3,
+                "track"=>$track
+        )));
 }
 header("content-type: application/javascript; charset=utf-8");
 ?>
@@ -65,7 +80,7 @@ var library=<?php
 					$mfiles->{$f}=false;
 				}
 				else{
-					$mfiles->{$f}=$getID3->analyze("$dir/$f")['tags']['id3v2'];
+					$mfiles->{$f}=processID3($getID3->analyze("$dir/$f"));
 				}
 			}
 			$json->{"/"}=$mfiles;
@@ -90,12 +105,13 @@ var library=<?php
 			}
 		}
 	}
-	echo json_encode(array(
+	$out=json_encode((object)array(
 		'music'=>tree($F,0,$getID3),
 		'path'=>"$F/",
 		'id3'=>$initGetID3||!is_bool($getID3),
 		'loadTime'=>microtime(true)-$mtime
 	));
+	echo $out===null?'null':$out;
 ?>;
 if(console&&console.log){
 	console.log("Playlist load time: "+library.loadTime);
@@ -107,4 +123,8 @@ else{
 		"warn":function(){},
 		"error":function(){}
 	};
+}
+if(library===null){
+	console.error("Your library contains at least one NON-UTF8 character, Try setting initGetID3 to false. If the issue persist check your file/folder names.");
+	library={"path":"","error":"Playlist is not UTF-8"};
 }

@@ -1,5 +1,5 @@
 "use strict";
-var track,audio,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,
+var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,
 	log=false,// Show messages in brower console
 	music=Array(),
 	hst={
@@ -8,6 +8,8 @@ var track,audio,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,
 		"nav":false,
 		"add":function(){
 			var trim=hst.log.length;
+			if(isNaN(audio.duration))
+				return log("Do not add",track,"to history");
 			log('Add track',track,'to history');
 			hst.log.push(track);
 			hst.log=hst.log.slice(music.length*-1);
@@ -33,12 +35,24 @@ function sendEvt(element,event){
 	evt.initEvent(event, true, true );
 	return !element.dispatchEvent(evt);
 }
+function sec2time(t){
+	var min=Math.floor(t/60),
+		sec=Math.round(t-min*60);
+	if(sec==60){
+		min++;
+		sec=0
+	}
+	if(sec<10){
+		sec='0'+sec;
+	}
+	return min+':'+sec;
+}
 function extToMime(ext){
 	ext=ext.toLowerCase();
 	log('File Extension:',ext);
 	switch(ext){
-		case "m4a":return "audio/mpeg";
 		case "mp3":return "audio/mpeg";
+		case "m4a":return "audio/mpeg";
 		case "ogg":return "audio/ogg";
 		case "oga":return "audio/ogg";
 		case "aac":return "audio/aac";
@@ -48,14 +62,15 @@ function extToMime(ext){
 		default: return "audio/"+ext;
 	}
 }
-function wait4It(fn){// Dirty trick
-	try{
-		fn();
-	}
-	catch(e){
-		setTimeout(function(){
-			wait4It(fn);
-		},50);
+function play(){
+	var promise=audio.play();
+	if(promise!==undefined){
+		promise.then(function(){
+			log('Audio playback started!');
+		}).catch(function(){
+			console.warn('Audio playback was prevented by browser. See https://goo.gl/xX8pDD');// Note that using => breaks IE
+			sendEvt(audio,'pause');
+		});
 	}
 }
 function reloadUnPlayed(init){
@@ -91,7 +106,7 @@ function setPlayed(i,test){
 			}
 		}
 		else{
-			log('Tack',i,'was Skipped');
+			log('Track',i,'was Skipped');
 			i++;
 		}
 	}
@@ -103,13 +118,16 @@ function setPlayed(i,test){
 }
 function applyID3(id3){
 	var unown='<Unknown>';
-/*	if(id3.title&&id3.title[0]){
+/*	if(id3.title){
 		title.head.textContent=id3.title+" | "+title.page;
 	}*/
-	ID3.title.textContent=id3.title&&id3.title[0]?id3.title[0]:unown;
-	ID3.artist.textContent=id3.artist&&id3.artist[0]?id3.artist[0]:unown;
-	ID3.album.textContent=id3.album&&id3.album[0]?id3.album[0]:unown;
-	ID3.year.textContent=id3.year&&id3.year[0]?id3.year[0]:unown;
+	ID3.title.textContent=id3.title?id3.title:unown;
+	ID3.artist.textContent=id3.artist?id3.artist:unown;
+	ID3.album.textContent=id3.album?id3.album:unown;
+	if(!id3.year&&id3.recording_time){
+		id3.year=id3.recording_time;
+	}
+	ID3.year.textContent=id3.year?id3.year:unown;
 }
 function populateList(arr,e,dir){
 	var li,i,x,cover;
@@ -178,13 +196,17 @@ function populateList(arr,e,dir){
 						last=music[track],
 						id3=this.getAttribute('id3');
 					log("Now Playing:",file);
+					if(track==this.id && !isNaN(audio.duration)){
+						audio.currentTime=0;
+						return play();
+					}
 					if(last.className.indexOf('playing')>-1){
 						while(last.id!='playlist'){
 							last.className=last.className.slice(0,-8);
 							last=last.parentNode.parentNode;
 						}
 					}
-					pic.src=cover;
+					pic.src=escape(cover);
 					title.player.textContent=this.textContent;
 					title.head.textContent=this.textContent+" | "+title.page;
 					if(id3!==null){
@@ -195,32 +217,30 @@ function populateList(arr,e,dir){
 						applyID3({});
 					}
 					showError(audio.canPlayType(mime)?false:"This browser does not support "+mime.substr(mime.indexOf('/')+1).toUpperCase()+" audio.");
-					s.addEventListener('error',function(e){
-						console.error(e);
-					},false);
 					s.type=mime;
-					s.src=file;
+					s.src=escape(file);
 					audio.appendChild(s);
 					if(audio.childNodes.length>1){
 						audio.removeChild(audio.childNodes[0]);
 					}
-					audio.load();
-					audio.play();
+					audio.load();// Let autoplay handle it
 					track=parseInt(this.id);
 					last=music[track];
 					while(last.id!='playlist'){
 						last.className+=' playing';
 						last=last.parentNode.parentNode;
 					}
+					sendEvt(window,'resize');
 					if(library.id3===true&&id3===null){
 						var httpRequest=new XMLHttpRequest();
 						httpRequest.onreadystatechange=function(){
 							if(httpRequest.readyState==4){
 								if(httpRequest.status==200){
+									log("HTTP Request:",httpRequest.responseURL,"\n",httpRequest.responseText);
 									if(httpRequest.responseText.length==0){
-										return console.error("An undefined error occured while fetching ID3 data");
+										return console.error("Non-UTF8 character in ID3 data at:\n",
+											decodeURIComponent(httpRequest.responseURL.slice(httpRequest.responseURL.indexOf('=')+1,httpRequest.responseURL.indexOf('&'))));
 									}
-									log("HTTP Request:",httpRequest.responseText);
 									var r=JSON.parse(httpRequest.responseText);
 									if(!r.id3){
 										return;
@@ -241,6 +261,7 @@ function populateList(arr,e,dir){
 							}
 						};
 						httpRequest.open('GET','playlist.php?file='+encodeURIComponent(file)+'&track='+track);
+						httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 						httpRequest.send(null);
 					}
 				},false);
@@ -251,16 +272,17 @@ function populateList(arr,e,dir){
 	}
 }
 function showError(msg){
+	var a=audioUI?audioUI.ui:audio;
 	if(!msg){
-		if(!!audio.style.display){
-			audio.removeAttribute('style');
+		if(!!a.style.display){
+			a.removeAttribute('style');
 		}
 		if(!!err.className)
 			err.removeAttribute('class');
 	}
 	else{
 		console.error(msg);
-		audio.style.display='none';
+		a.style.display='none';
 		err.className="open";
 		err.textContent=msg;
 	}
@@ -268,7 +290,8 @@ function showError(msg){
 function init(){
 	log=log?console.log:function(){};
 	log('Begin Main JavaScript File');
-	var config=localStorage.getItem("HTML5_music"),
+	var i,lst,
+		config=localStorage.getItem("HTML5_music"),
 		path=library.path.split('/'),
 		ul=document.createElement('ul'),
 		base={// Default player settings
@@ -299,10 +322,11 @@ function init(){
 	loop=getId('loop');
 	repeat=getId('repeat');
 	err=getId('error');
-	offset=getId('player').offsetHeight+30;
+	err.addEventListener('click',function(){
+		showError(false);
+	},false);
 	playlist=getId('playlist');
 	playlist.appendChild(ul);
-	sendEvt(window,'resize');
 	if(path.length>2){
 		log('Create partent directory folder');
 		var path=library.path.split('/'),
@@ -327,7 +351,13 @@ function init(){
 	if(!library.id3){
 		getId('id3').style.display='none';
 	}
-	config=config==null?base:JSON.parse(config);
+	//config=config==null?base:JSON.parse(config);
+	config=JSON.parse(config);
+	for(i in base){
+		if(config[i]===undefined){
+			config[i]=base[i];
+		}
+	}
 	log('Config Data:',config);
 	unPlayed=config.unPlayed;
 	if(config.tracks!=music.length){
@@ -348,17 +378,32 @@ function init(){
 			}
 		}
 	}
-	audio.addEventListener("error",function(){
-		console.error(arguments);
+	audio.addEventListener("error",function(e){
+		console.error(
+			"https://developer.mozilla.org/en-US/docs/Web/API/MediaError",
+			"\n",
+			this.error
+		);
+		showError([
+				this.error.message,
+				"The fetching of the associated resource was aborted by the user's request.",
+				"Some kind of network error occurred which prevented the media from being successfully fetched, despite having previously been available.",
+				"Despite having previously been determined to be usable, an error occurred while trying to decode the media resource, resulting in an error.",
+				"The associated resource or media provider object (such as a MediaStream) has been found to be unsuitable."
+			][this.error.message==""?this.error.code:0]
+		);
 	},false);
 	audio.addEventListener("ended",function(){
+		if(music.length==0){
+			return showError(library.error||"Playlist is empty");
+		}
 		log('End Track:',track);
 		var next=track,
 			indx=setPlayed(track,true);
 		if(loop.checked){
 			log('Track Loop');
 			audio.currentTime=0;
-			return audio.play();
+			return play();
 		}
 		hst.nav=false;
 		hst.indx++;
@@ -396,11 +441,111 @@ function init(){
 		}
 		if(next==track&&!!audio.childNodes[0].tagName){
 			audio.currentTime=0;
-			return audio.play();
+			return play();
 		}
 		log("Next Track ID is: #",next);
 		sendEvt(music[next],'click');
 	},false);
+	audioUI=getId('audioUI');
+	if(!String.fromCodePoint&&audioUI){// The input event does not work in IE; Only IE does not have String.fromCodePoint
+		audioUI.parentNode.removeChild(audioUI);
+		audioUI=false;
+	}
+	if(audioUI){
+		audioUI={
+			"ui":audioUI,
+			"state":getId('playPause'),
+			"time":getId('current'),
+			"now":getId('time'),
+			"end":getId('length'),
+			"mute":getId('mute'),
+			"volume":getId('volume'),
+			"seeking":false,
+			"autoPause":false
+		};
+		// Play/Pause
+		audioUI.state.addEventListener('click',function(){
+			audio[audio.paused?'play':'pause']();
+		},false);
+		audio.addEventListener('pause',function(){
+			audioUI.state.textContent=String.fromCharCode(9654);
+			audioUI.state.title="Play";
+		},false);
+		audio.addEventListener('play',function(){
+			audioUI.state.textContent=String.fromCharCode(10074,10074);
+			audioUI.state.title="Pause";
+		},false);
+		// Time Slider and track Time
+		audio.addEventListener('timeupdate',function(){
+			if(audioUI.seeking) return;
+			audioUI.time.value=(audio.currentTime/audio.duration).toFixed(8);
+			audioUI.now.textContent=sec2time(audio.currentTime);
+		},false);
+		audioUI.time.addEventListener('change',function(){
+			audio.currentTime=audio.duration*this.value;
+			audioUI.seeking=false;
+			if(audioUI.autoPause){
+				play();
+				audioUI.autoPause=false;
+			}
+		},false);
+		audioUI.time.addEventListener('mouseup',function(){
+			// Possible to not fire change if user leaves slider in the same point they started
+			audioUI.seeking=false;
+		},false);
+		audioUI.time.addEventListener('input',function(){
+			if(!audio.paused&&audio.duration-audio.currentTime<1){
+				audioUI.autoPause=true;
+				audio.pause();
+			}
+			audioUI.seeking=true;
+			audioUI.now.textContent=sec2time(audio.duration*this.value);
+		},false);
+		audio.addEventListener('loadedmetadata',function(){
+			audioUI.end.textContent=sec2time(audio.duration);
+		},false);
+		//Mute Button
+		audioUI.mute.addEventListener('click',function(){
+			audio.muted=!audio.muted;
+		},false);
+		// Volume Slider
+		audio.addEventListener('volumechange',function(){
+			audioUI.volume.value=audio.volume;
+			if(audio.muted){
+				audioUI.volume.title='Muted';
+				//audioUI.mute.textContent=String.fromCodePoint(128264);
+				audioUI.mute.textContent=String.fromCharCode(57559);
+			}
+			else{
+				audioUI.volume.title=Math.round(audio.volume*100)+'%';
+				//audioUI.mute.textContent=String.fromCodePoint(Math.round(audio.volume)==0?128265:128266);
+				audioUI.mute.textContent=String.fromCharCode(Math.round(audio.volume)==0?57558:57557);
+			}
+		},false);
+		audioUI.volume.addEventListener('input',function(){
+			audio.volume=this.value;
+			audio.muted=false;
+		},false);
+		audioUI.volume.addEventListener('dblclick',function(){
+			var p=prompt('Desired volume level as a percentage',Math.round(audio.volume*100));
+			if(!p) return;
+			p=parseInt(p);
+			if(isNaN(p)) return alert('Sorry that is not a whole number');
+			if(p>=0&&p<=100){
+				audio.volume=p/100;
+			}
+			else{
+				alert(p+' is a percentage, it must be between 0 and 100');
+			}
+		},false);
+		// Make sure volume slider matches player volume
+		if(config.volume==1) sendEvt(audio,'volumechange');
+	}
+	else{
+		audioUI=false;
+		audio.controls=true;
+	}
+	offset=getId('player').offsetHeight+30;
 	getId('next').addEventListener("click",function(){
 		sendEvt(audio,'ended');
 	},false);
@@ -435,23 +580,41 @@ function init(){
 		repeat.disabled=true;
 		shuffle.disabled=true;
 	}
-	loop.addEventListener('click',function(){
+	loop.addEventListener('click',function(event){
+		event.stopPropagation();
 		repeat.disabled=this.checked;
 		shuffle.disabled=this.checked;
+		repeat.parentNode.className=this.checked;
+		shuffle.parentNode.className=this.checked;
 	},false);
+	lst=[shuffle,repeat,loop];
+	for(i in lst){// checkboxes are annoying on smart phones
+		lst[i].parentNode.addEventListener('click',function(){
+			this.childNodes[1].click();
+		},false);
+		if(lst[i]!==loop){
+			lst[i].addEventListener('click',function(event){
+				event.stopPropagation();
+			},false);
+		}
+	}
 	track=config.track>music.length-1?0:config.track;
 	if(config.time==0&&track==0){
 		sendEvt(audio,'ended');
 	}
 	else{
-		sendEvt(music[track],'click');
-		audio.pause();
-		wait4It(function(){
+		audio.addEventListener('canplay',function fn(e){
+			e.target.removeEventListener(e.type, fn);
+			log('Restore track state from previous session');
 			audio.currentTime=config.time;
-			if(config.state===false){
-				audio.play();
+			if(config.state===false){//audio[config.state===false?'play':'pause']();
+				play();
 			}
-		});
+			else{
+				audio.pause();
+			}
+		},false);
+		sendEvt(music[track],'click');
 	}
 	audio.volume=config.volume;
 	window.onunload=function(){

@@ -6,10 +6,11 @@ body{
 	background:#383838;
 	color:white;
 	font-size:16px;
-	font-family:'open sans' sans serif;
+	font-family:DejaVu Serif, FreeSerif;
 	font-variant:normal;
 	font-style:normal;
 	text-align:center;
+	text-rendering:optimizeLegibility;
 }
 body > div{
 	border:1px solid white;
@@ -27,7 +28,6 @@ body > div{
 }
 #player{
 	padding:10px;
-	text-align:center;
 	margin:10px 0;
 }
 #player > div{
@@ -42,7 +42,7 @@ body > div{
 	flex:none;
 	width:100%;
 }
-#player #opts span{
+#player #opts div{
 	display:inline-block;
 	width:100%;
 }
@@ -53,6 +53,8 @@ body > div{
 	border-radius:5px;
 	margin:0 5px 5px 0;
 	align-self:auto;
+	line-height:100px;
+	font-size:100px;
 }
 #player #title{
 	width:100%;
@@ -61,11 +63,13 @@ body > div{
 	text-align:center;
 	word-wrap:break-word;
 }
+/*#player #opts span:has(> input:not([disabled])),/* Unsupported as of 2018.03.17: https://caniuse.com/#feat=css-has */
+#player #opts span:not(.true),
 #player input:not([disabled]){
 	cursor:pointer;
 }
 #player input[type="button"]{/* Coloring credit: http://devgrow.com/dark-button-navigation-using-css3 */
-	font-family:Arial;
+	font-family:Arial, DejaVu Serif, FreeSerif;
 	height:32px;
 	font-size:17px;
 	color:#9FA8B0;
@@ -73,8 +77,10 @@ body > div{
 	box-shadow:1px 1px 1px rgba(0,0,0,0.2);
 	border:1px solid #1c252b;
 	border-radius:10px;
+	outline:none;
 }
-#player input[type="button"]:hover{
+#player input[type="button"]:hover,
+#player input[type="button"]:focus{
 	background-image: linear-gradient(to bottom, #4C5A64 3%, #404F5A 4%, #2E3940 100%);
 	color:white;
 }
@@ -119,6 +125,120 @@ body > div{
 #player audio::-webkit-media-controls-current-time-display{
 	color:white;
 }
+#player #audioUI{
+	display:flex;
+	flex:none;
+	width:100%;
+	background:#272525;
+	border-radius:4px;
+	padding:8px 2px;
+	align-items:center;
+	height:15px;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+#player #audioUI > span:not([id]){
+	font-size:small;
+	white-space:nowrap;
+}
+#player #audioUI > span[id]{
+	font-size:22px;
+	cursor:pointer;
+	padding:0 3px;
+	color:gray;
+	transition:color 0.25s;
+}
+#player #audioUI > span[id]:hover,
+#player #audioUI > span[id]:active{
+	color:white;
+}
+@font-face{
+	/*
+	* Striped down to the 3 characters I am using
+	* https://github.com/iconic/open-iconic 
+	*/
+	font-family: Open Iconic Volume;
+	src: url('data:font/truetype;base64,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');
+}
+#player #audioUI #mute{
+	/* font-family:Segoe UI Symbol, Symbola, Quivira, Segoe UI Emoji, EmojiOne Mozilla; */
+	font-family:Open Iconic Volume;
+	min-width:22px;
+	text-align:left;
+}
+#player #audioUI input{
+	appearance:none;
+	-moz-appearance:none;
+	-webkit-appearance:none;
+	background-color:transparent;
+	outline:none;
+	margin:0 5px;
+	padding:0;
+	flex:3;
+}
+#player #audioUI input::-moz-focus-outer{
+	border:0;
+}
+#player #audioUI input::-moz-range-thumb{
+	transition:background-color 0.25s;
+	background-color:#999;
+	border:none;
+	border-radius:50%;
+	cursor:ew-resize;
+	width:15px;
+	height:15px;
+}
+#player #audioUI input::-moz-range-thumb:hover{
+	background-color:white;
+}
+#player #audioUI input::-moz-range-track{	
+	background-color:#999;
+	border-radius:3px;
+	height:3px;
+	border:none;
+}
+#player #audioUI input::-webkit-slider-runnable-track{
+	background-color:#999;
+	border-radius:3px;
+	height:3px;
+	border:none;
+}
+#player #audioUI input::-webkit-slider-thumb{
+	-webkit-appearance:none;
+	transition:background-color 0.25s;
+	background-color:#999;
+	border:none;
+	border-radius:50%;
+	cursor:ew-resize;
+	width:15px;
+	height:15px;
+	margin-top:-6px;
+}
+#player #audioUI input::-webkit-slider-thumb:hover{
+	background-color:white;
+}
+#player #audioUI input::-ms-track{
+	height:3px;
+	background:transparent;
+}
+#player #audioUI input::-ms-fill-upper,
+#player #audioUI input::-ms-fill-lower{
+	background:#999;
+	border-radius:3px;
+}
+#player #audioUI input::-ms-tooltip{
+	display:none;
+}
+#player #audioUI input::-ms-thumb{
+	margin-top:0;
+}
+#player #audioUI #volume{
+	min-width:30px;
+	max-width:75px;
+	flex:1;
+}
 #playlist{
 	min-height:300px;
 	overflow:auto;
@@ -140,16 +260,12 @@ body > div{
 	list-style:none;
 	padding-left:0;
 }
-#playlist > ul ul{ /* Next 3 lines make the folder open/close have a slide effect, I found it hard to use with the hover effect enabled */
-	/*transition-property:height;
-	transition-duration:1s;
-	transition-timing-function:linear;*/
-	overflow:hidden;
-	height:0;
+#playlist > ul ul{
+	display:none;
 }
 #playlist li:hover > ul, /* This is the line that makes the folder open on mouse over */
 #playlist li.open > ul{
-	height:auto;
+	display:block;
 }
 #playlist .back{
 	background-image:url(/icons/small/back.png), url(/icons/folder.png);

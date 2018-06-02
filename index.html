@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8"/>
+		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title id="pageTitle">Music Player</title>
@@ -12,7 +12,7 @@
 	</head>
 	<body onload="init();">
 		<div id="player">
-			<img id="cover"/>
+			<img id="cover" alt="&#127925;"/>
 			<div id="ctrl">
 				<h4 id="title"></h4>
 				<input id="back" type="button" value="|&#x25c0;&#x25c0;"/>
@@ -25,12 +25,31 @@
 				Album: <span id="id3_album"></span><br class="year"/>
 				<span class="year">Year:</span> <span id="id3_year" class="year"></span>
 			</div>
-			<audio id="audio" controls controlsList="nodownload">This is your browser speaking, I don't support HTML5 cause I am too old to learn new tricks.</audio>
-			<p id="error"></p>
+			<audio id="audio" controlsList="nodownload" autoplay>This is your browser speaking, I don't support HTML5 cause I am too old to learn new tricks.</audio>
+			<!-- Custom player ui notes
+				This only exist here cause mobile browsers do not have a volume slider
+				If you do not like my custom audio UI just delete the below html block
+				and enjoy the browers stock ui
+				*Speaker char does not work in chrome on windows 7
+				&#128264; - Speaker Off
+				&#128265; - Speaker Low
+				&#128266; - Speaker High
+				&#127925; - Musical Note
+				&#9612;&#9612; - Pause
+				&#9654; - Play
+			-->
+			<div id="audioUI">
+				<span id="playPause"></span>
+				<input id="current" type="range" min="0" max="1" step="0.00000001"/>
+				<span><span id="time"></span> / <span id="length"></span>&nbsp;</span>
+				<span id="mute" title="Mute"></span>
+				<input id="volume" type="range" min="0" max="1" step="0.01"/>
+			</div>
+			<p id="error" title="Click to hide"></p>
 			<div id="opts">
-				<span>Shuffle: <input id="shuffle" type="checkbox"/></span>
-				<span>Repeat: <input id="repeat" type="checkbox"/></span>
-				<span>Loop: <input id="loop" type="checkbox"/></span>
+				<div><span>Shuffle: <input id="shuffle" type="checkbox"/></span></div>
+				<div><span>Repeat: <input id="repeat" type="checkbox"/></span></div>
+				<div><span>Loop: <input id="loop" type="checkbox"/></span></div>
 			</div>
 		</div><br/>
 		<div id="playlist"></div>
