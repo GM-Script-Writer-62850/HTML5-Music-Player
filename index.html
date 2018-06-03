@@ -51,8 +51,43 @@
 				<div><span>Repeat: <input id="repeat" type="checkbox"/></span></div>
 				<div><span>Loop: <input id="loop" type="checkbox"/></span></div>
 			</div>
-		</div><br/>
-		<div id="playlist"></div>
+		</div>
+		<br/>
+		<div id="tab_container" class="playlist">
+			<div id="tabs">
+				<div class="playlist">Library</div>
+				<div class="find">Search</div>
+				<div class="hst">History</div>
+			</div>
+			<span>
+				Track Action: <select id="action">
+					<option>Play</option>
+					<option>Enqueue</option><!-- And here was was thinking eqeue was hard to spell! -->
+				</select>
+			</span>
+			<div id="tab_content">
+				<div id="playlist"></div>
+				<div id="find">
+					<form action="#" name="search">
+						Find: <input type="input" name="str"/>
+						<br/>
+						Match <select name="match"/>
+							<option value="name">File Name</option>
+							<option value="path">Full Path</option>
+						</select>
+						<br/>
+						<input type="checkbox" name="case"/> Case Sensitive
+						<input type="submit" value="Find"/>
+					</form>
+					<hr/>
+					<ul id="search"></ul>
+				</div>
+				<div id="hst">
+					Current loaded track: <span id="index"></span>
+					<ol id="queue"></ol>
+				</div>
+			</div>
+		</div>
 		<!--<br/><div id="debugHst"></div>-->
 	</body>
 </html>
