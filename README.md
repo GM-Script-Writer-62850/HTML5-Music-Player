@@ -43,5 +43,5 @@ This uses 5 icons from the apache web server, if you are using a different web s
 <a href="http://www.apache.org/icons/open.folder.png" target="_blank">/icons/open.folder.png</a><br/>
 <a href="http://www.apache.org/icons/folder.png" target="_blank">/icons/folder.png</a><br/>
 <a href="http://www.apache.org/icons/sound2.png" target="_blank">/icons/sound2.png</a><br/>
-<a href="http://www.apache.org/icons/small/back.png" target="_blank">/icons/small/back.png</a>
+<a href="http://www.apache.org/icons/small/back.png" target="_blank">/icons/small/back.png</a><br/>
 <a href="http://www.apache.org/icons/down.png" target="_blank">/icons/down.png</a>
