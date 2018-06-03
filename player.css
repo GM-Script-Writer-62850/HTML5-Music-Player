@@ -403,10 +403,26 @@ body > div{
 		font-size:17px;
 	}
 }
+@media (max-width:550px){
+	#tabs{
+		font-size:12px;
+	}
+	#tab_container > span select{
+		border:none;
+	}
+}
 @media (max-width:475px){
 	#player input[type="button"]{
 		height:25px;
 		font-size:16px;
+	}
+	#tab_container > span > span:first-child{
+		display:none;
+	}
+}
+@media (max-width:400px){
+	#tab_container > span > span{
+		display:none;
 	}
 }
 @media (max-width:320px){
@@ -414,7 +430,10 @@ body > div{
 		margin-top:0;
 		margin-bottom:2px;
 	}
-	#playlist{
+	#tab_container{
 		margin-bottom:0;
+	}
+	body > br{
+		display:none;
 	}
 }
