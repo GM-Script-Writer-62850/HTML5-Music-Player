@@ -1,6 +1,6 @@
 "use strict";
 var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,trackAction,
-	log=false,// Show messages in brower console
+	log=false,// Show messages in browser console
 	music=Array(),
 	spam={
 		"block":false,
@@ -225,7 +225,7 @@ function populateList(arr,e,dir){
 				li.setAttribute('cover',cover?dir+cover:'/icons/sound2.png');
 				li.addEventListener('click',function(event){
 					function safeURI(src){
-						return encodeURI(src).replace(/#/g,'%23').replace(/\?/g,'%3F');
+						return encodeURI(src).replace(/[(\?=&#]/g,function(char){return escape(char);});
 					}
 					event.stopPropagation();
 					if(hst.nav){// manual navigation
@@ -408,7 +408,7 @@ function init(){
 		getId('id3').style.display='none';
 	}
 	//config=config==null?base:JSON.parse(config);
-	config=JSON.parse(config);
+	config=JSON.parse(config)||{};
 	for(i in base){
 		if(config[i]===undefined){
 			config[i]=base[i];
