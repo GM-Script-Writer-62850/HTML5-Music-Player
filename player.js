@@ -224,7 +224,7 @@ function populateList(arr,e,dir){
 				li.setAttribute('file',dir+x);
 				li.setAttribute('cover',cover?dir+cover:'/icons/sound2.png');
 				li.addEventListener('click',function(event){
-					function safeURI(src){
+					function safeURI(src){// Discussion here: https://github.com/ltGuillaume/MusicFolderPlayer/issues/1
 						return encodeURI(src).replace(/[(\?=&#]/g,function(char){return escape(char);});
 					}
 					event.stopPropagation();

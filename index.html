@@ -70,13 +70,12 @@
 				<div id="find">
 					<form action="#" name="search">
 						Find: <input type="input" name="str"/>
+						<span><input type="checkbox" name="case"/><span onclick="this.previousSibling.click()"> Case Sensitive</span></span>
 						<br/>
 						Match <select name="match"/>
 							<option value="name">File Name</option>
 							<option value="path">Full Path</option>
 						</select>
-						<br/>
-						<input type="checkbox" name="case"/> Case Sensitive
 						<input type="submit" value="Find"/>
 					</form>
 					<hr/>
