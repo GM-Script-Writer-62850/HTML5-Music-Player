@@ -239,7 +239,6 @@ body > div{
 	max-width:75px;
 	flex:1;
 }
-
 #tab_container{
 	border:none;
 }
@@ -328,7 +327,7 @@ body > div{
 #playlist .folder.open{
 	background-image:url(/icons/folder.open.png);
 }
-#playlist .song,{
+#playlist .song{
 	background-image:url(/icons/sound2.png);
 }
 #playlist li[played]:before{
