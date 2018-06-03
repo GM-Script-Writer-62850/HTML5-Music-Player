@@ -39,8 +39,9 @@ Cover images should be named cover (not case sensitive), they should be in png, 
 Cover images are optional<br/>
 Any file not called cover will be treated as a audio file<br/>
 All files should have a file extension (eg .png, .mp3, .ogg, etc)<br/>
-This uses 4 icons from the apache web server, if you are using a different web service, grab these icons and save them as the following:<br/>
+This uses 5 icons from the apache web server, if you are using a different web service, grab these icons and save them as the following:<br/>
 <a href="http://www.apache.org/icons/open.folder.png" target="_blank">/icons/open.folder.png</a><br/>
 <a href="http://www.apache.org/icons/folder.png" target="_blank">/icons/folder.png</a><br/>
 <a href="http://www.apache.org/icons/sound2.png" target="_blank">/icons/sound2.png</a><br/>
 <a href="http://www.apache.org/icons/small/back.png" target="_blank">/icons/small/back.png</a>
+<a href="http://www.apache.org/icons/down.png" target="_blank">/icons/down.png</a>
