@@ -67,6 +67,9 @@ function randInt(min,max){
 	log("RNG",{"min":min,"max":max-1,"int":rand});
 	return rand;
 }
+function escapeRegExp(string){// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 function sendEvt(element,event){
 	log('Send',event,'event to',element);
 	//element.dispatchEvent(new Event(event));//This does not work in IE11
@@ -437,6 +440,10 @@ function init(){
 			}
 		}
 	}
+	audio.addEventListener("stalled",function(){
+		console.error("The stream of",music[track].getAttribute('file'),"has stalled!!!");
+		showError("This stream has stalled!!!");
+	},false);
 	audio.addEventListener("error",function(e){
 		console.error(
 			"https://developer.mozilla.org/en-US/docs/Web/API/MediaError",
@@ -681,7 +688,7 @@ function init(){
 			if(config.state===false){//audio[config.state===false?'play':'pause']();
 				play();
 			}
-			else{console.log('we are here');
+			else{
 				audio.pause();// needed for firefox to pause
 				sendEvt(audio,'pause');// needed for chrome to show play button
 			}
@@ -736,7 +743,7 @@ function init(){
 			i,li,txt,spn,res,loc,x,
 			len=library.path.length,
 			cmp=this.match.value=='name',
-			src=new RegExp(this.str.value,this.case.checked?'':'i');
+			src=new RegExp(escapeRegExp(this.str.value),this.case.checked?'':'i');
 		out.textContent='';
 		if(this.str.value=='') return;
 		for(i in music){
@@ -756,6 +763,7 @@ function init(){
                                 li.textContent=txt.substr(0,loc);
 				spn=document.createElement('span');
 				spn.textContent=res;
+				if(cmp) li.title=music[i].getAttribute('file').substr(len);
 				li.appendChild(spn);
 				li.appendChild(document.createTextNode(txt.substr(loc+res.length)));
 
