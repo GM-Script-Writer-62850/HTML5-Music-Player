@@ -617,7 +617,7 @@ function init(){
 			this.parentNode.parentNode.className=this.className;
 		},false)
 	}
-	offset=getId('player').offsetHeight+getId('tabs').offsetHeight+25;
+	offset=getId('player').offsetHeight+getId('tabs').offsetHeight+29;
 	getId('next').addEventListener("click",function(){
 		if(spam.block) return spam.warn();
 		spam.lock();
@@ -794,7 +794,7 @@ function init(){
 window.onresize=function(){
 	var i,
 		e=playlist.parentNode.children,
-		h=window.innerHeight-offset+(window.innerWidth<=320?24:0)+'px';
+		h=window.innerHeight-offset+(window.innerWidth<=320?28:0)+'px';
 	for(i=e.length-1;i>-1;i--){
 		e[i].style.maxHeight=h;
 	}

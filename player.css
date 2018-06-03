@@ -68,25 +68,34 @@ body > div{
 #player input:not([disabled]){
 	cursor:pointer;
 }
-#player input[type="button"]{/* Coloring credit: http://devgrow.com/dark-button-navigation-using-css3 */
+#player input[type="button"],
+#find input[type="submit"],
+#tab_container select,
+#find input[type="text"]{/* Coloring credit: http://devgrow.com/dark-button-navigation-using-css3 */
 	font-family:Arial, DejaVu Serif, FreeSerif;
 	height:32px;
 	font-size:17px;
 	color:#9FA8B0;
-	background-image: linear-gradient(to bottom, #3D4850 3%, #313d45 4%, #232B30 100%);
+	background-image:linear-gradient(to bottom, #3D4850 3%, #313d45 4%, #232B30 100%);
 	box-shadow:1px 1px 1px rgba(0,0,0,0.2);
 	border:1px solid #1c252b;
 	border-radius:10px;
 	outline:none;
 }
 #player input[type="button"]:hover,
-#player input[type="button"]:focus{
-	background-image: linear-gradient(to bottom, #4C5A64 3%, #404F5A 4%, #2E3940 100%);
+#player input[type="button"]:focus,
+#tab_container select:focus,
+#tab_container select:hover,
+#find input[type="text"]:focus,
+#find input[type="submit"]:hover{
+	background-image:linear-gradient(to bottom, #4C5A64 3%, #404F5A 4%, #2E3940 100%);
 	color:white;
 }
-#player input[type="button"]:active{
-	background: linear-gradient(to bottom, #20282D 3%, #252E34 51%, #222A30 100%);
-	box-shadow: 1px 1px 1px rgba(255,255,255,0.1)
+#player input[type="button"]:active,
+#tab_container select:active,
+#find input[type="submit"]:active{
+	background-image:linear-gradient(to bottom, #20282D 3%, #252E34 51%, #222A30 100%);
+	box-shadow:1px 1px 1px rgba(255,255,255,0.1)
 }
 #player #back,
 #player #next{
@@ -259,9 +268,27 @@ body > div{
 #tab_container > span{
 	margin-left:auto;
 }
-#tab_container > span select{
-	font-size:11px;
-	font-family:inherit;
+#tab_container select{
+	border-radius:5px;
+	height:23px;
+	font-size:15px;
+	padding:0 18px 0 5px;
+	background-image:url('/icons/down.png'),linear-gradient(to bottom, #3D4850 3%, #313d45 4%, #232B30 100%);
+	background-position:calc(100% - 5px) center,top left;
+	background-repeat:no-repeat;
+	background-size:13px,auto; 
+	-moz-appearance:none;
+}
+#tab_container #find select{
+	margin-top:5px;
+}
+#tab_container select:focus,
+#tab_container select:hover{
+	background-image:url('/icons/down.png'),linear-gradient(to bottom, #4C5A64 3%, #404F5A 4%, #2E3940 100%);
+	color:#FFF;
+}
+#tab_container select:active{
+	background-image:url('/icons/down.png'),linear-gradient(to bottom, #20282D 3%, #252E34 51%, #222A30 100%);
 }
 #tabs{
 	margin-bottom:-1px;
@@ -293,7 +320,6 @@ body > div{
 #playlist{
 	min-height:300px;
 	text-align:left;
-	margin-bottom:6px;
 }
 #playlist > ul{
 	margin:0 0 4px 4px;
@@ -317,6 +343,10 @@ body > div{
 #playlist li.open > ul{
 	display:block;
 }
+#playlist .back,
+#playlist .folder,
+#playlist .folder.open,
+#playlist .song,
 #playlist .back{
 	background-image:url(/icons/small/back.png), url(/icons/folder.png);
 	background-position:1px 7px,left 2px;
@@ -327,7 +357,8 @@ body > div{
 #playlist .folder.open{
 	background-image:url(/icons/folder.open.png);
 }
-#playlist .song{
+#playlist .song,
+#find #search li{
 	background-image:url(/icons/sound2.png);
 }
 #playlist li[played]:before{
@@ -352,6 +383,12 @@ body > div{
 #find form > span:after{
 	content:")";
 }
+#find input[type="text"]{
+	height:25px;
+	color:#FFF;
+	border-radius:5px;
+	width:175px;
+}
 #find #search li,
 #hst li{
 	cursor:pointer;
@@ -362,10 +399,9 @@ body > div{
 	list-style:none;
 }
 #find #search li{
-	background-image:url(/icons/sound2.png);
 	padding-left:25px;
 	background-repeat:no-repeat;
-	background-position:left 2px;
+	background-position:left center;
 }
 #find #search span{
 	text-decoration:underline;
@@ -413,11 +449,9 @@ body > div{
 	}
 }
 @media (max-width:550px){
-	#tabs{
+	#tabs,
+	#tab_container > span{
 		font-size:12px;
-	}
-	#tab_container > span select{
-		border:none;
 	}
 }
 @media (max-width:475px){
