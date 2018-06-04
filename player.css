@@ -343,13 +343,14 @@ body > div{
 #playlist li.open > ul{
 	display:block;
 }
-#playlist .back,
-#playlist .folder,
-#playlist .folder.open,
-#playlist .song,
 #playlist .back{
 	background-image:url(/icons/small/back.png), url(/icons/folder.png);
 	background-position:1px 7px,left 2px;
+}
+#playlist .folder,
+#playlist .folder.open,
+#playlist .song{
+	background-position:left 2px;
 }
 #playlist .folder{
 	background-image:url(/icons/folder.png);
