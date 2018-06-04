@@ -1,5 +1,5 @@
 "use strict";
-var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,offset,unPlayed,trackAction,
+var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,tabs,unPlayed,trackAction,
 	log=false,// Show messages in browser console
 	music=Array(),
 	spam={
@@ -611,13 +611,12 @@ function init(){
 		audioUI=false;
 		audio.controls=true;
 	}
-	offset=getId('tabs');
-	for(i=offset.children.length-1;i>-1;i--){
-		offset.children[i].addEventListener('click',function(){
+	tabs=getId('tabs');
+	for(i=tabs.children.length-1;i>-1;i--){
+		tabs.children[i].addEventListener('click',function(){
 			this.parentNode.parentNode.className=this.className;
 		},false)
 	}
-	offset=getId('player').offsetHeight+getId('tabs').offsetHeight+29;
 	getId('next').addEventListener("click",function(){
 		if(spam.block) return spam.warn();
 		spam.lock();
@@ -791,10 +790,15 @@ function init(){
 		playlist.setAttribute('style','max-height:60px;min-height:30px;');// Let me see what I'm doing
 	}
 }
-window.onresize=function(){
+window.onresize=function(){// This is to prevent a vertical scroll bar, well untill the min height comes into play
 	var i,
 		e=playlist.parentNode.children,
-		h=window.innerHeight-offset+(window.innerWidth<=320?28:0)+'px';
+		h=window.innerWidth;
+	h=h<=320?2:(h<=750?15:30);// offsetHeight does not include margin also simulate bottom margin for the tab_container
+	h+=player.offsetHeight;
+	h+=tabs.offsetHeight-1;// Has negative bottom margin
+	h=window.innerHeight-h;// Remaining space available
+	h+='px';
 	for(i=e.length-1;i>-1;i--){
 		e[i].style.maxHeight=h;
 	}

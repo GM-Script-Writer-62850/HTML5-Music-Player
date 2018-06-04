@@ -309,7 +309,7 @@ body > div{
 #tab_content > div{
 	border:1px solid white;
 	display:none;
-	min-height:20px;
+	min-height:160px;
 	border-radius:5px;
 	width:100%;
 	padding:5px;
@@ -318,7 +318,6 @@ body > div{
 	overflow:auto;
 }
 #playlist{
-	min-height:300px;
 	text-align:left;
 }
 #playlist > ul{
@@ -350,7 +349,7 @@ body > div{
 #playlist .folder,
 #playlist .folder.open,
 #playlist .song{
-	background-position:left 2px;
+	 background-position:left 2px;
 }
 #playlist .folder{
 	background-image:url(/icons/folder.png);
@@ -428,6 +427,12 @@ body > div{
 		width:85%;
 	}
 }
+@media (max-width:750px){
+	#player{
+		margin-top:5px;
+		margin-bottom:5px;
+	}
+}
 @media (max-width:690px){
 	body > div{
 		 width:90%;
@@ -482,9 +487,6 @@ body > div{
 	#player{
 		margin-top:0;
 		margin-bottom:2px;
-	}
-	#tab_container{
-		margin-bottom:0;
 	}
 	body > br{
 		display:none;
