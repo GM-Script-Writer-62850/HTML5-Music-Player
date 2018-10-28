@@ -5,13 +5,13 @@ var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,tabs,unPl
 	spam={
 		"block":false,
 		"lock":function(){
+			if(spam.block){
+				console.warn("No Spamming");
+				return true;
+			}
 			spam.block=true;
-		},
-		"clear":function(){
 			setTimeout(function(){spam.block=false;},500);// miliseconds between actions
-		},
-		"warn":function(){
-			console.warn("No Spamming");
+			return false;
 		}
 	},
 	hst={
@@ -49,6 +49,13 @@ var track,audio,audioUI,pic,title,ID3,shuffle,repeat,loop,err,playlist,tabs,unPl
 			if(hst.que.children.length>hst.log.length)
 				hst.que.removeChild(hst.que.children[hst.que.children.length-1]);
 			return trim==hst.log.length;
+		},
+		"tracking":{
+			"update":function(){
+				var i=hst.log.length-hst.indx;
+				hst.tracking.ele.textContent=i;
+				hst.tracking.style.textContent='#queue li:nth-child('+i+'){color:lime;font-style:italic;}';
+			}
 		}
 	};
 function getId(id){
@@ -228,20 +235,23 @@ function populateList(arr,e,dir){
 						return encodeURI(src).replace(/[(\?=&#]/g,function(char){return escape(char);});
 					}
 					event.stopPropagation();
-					if(hst.nav){// manual navigation
+					if(hst.nav){
+						log('Manual navigation detected');
 						if(trackAction==1){
 							if(hst.log.length>0&&hst.log[hst.log.length-1]==this.id){
 								if(!confirm('Add this track to queue consecutively?')) return;
 							}
 							if(hst.indx==hst.log.length) hst.add();
-							return hst.add(parseInt(this.id));
+							hst.add(parseInt(this.id));
+							hst.tracking.update();
+							return;
 						}
 						hst.add();
 						hst.indx=hst.log.length;
 						setPlayed(track,true);
 					}
 					hst.nav=true;
-					hst.tracking.textContent=hst.log.length-hst.indx;
+					hst.tracking.update();
 					var file=this.getAttribute('file'),
 						cover=this.getAttribute('cover'),
 						s=document.createElement('source'),
@@ -251,6 +261,7 @@ function populateList(arr,e,dir){
 					log("Now Playing:",file);
 					if(track==this.id && !isNaN(audio.duration)){
 						audio.currentTime=0;
+						last=music[track];
 						return play();
 					}
 					if(last.className.indexOf('playing')>-1){
@@ -361,7 +372,10 @@ function init(){
 		};
 	audio=getId('audio');
 	hst.que=getId('queue');
-	hst.tracking=getId('index');
+	hst.tracking.ele=getId('index');
+	hst.tracking.style=document.createElement('style');
+	hst.tracking.style.type="text/css";
+	document.body.previousElementSibling.appendChild(hst.tracking.style);
 	title={
 		"player":getId('title'),
 		"head":getId('pageTitle'),
@@ -433,7 +447,7 @@ function init(){
 	trackAction.selectedIndex=config.action;
 	sendEvt(trackAction,'change');
 	if(unPlayed.length!=music.length){
-		for(var i in music){
+		for(i in music){
 			i=parseInt(music[i].id);
 			if(unPlayed.indexOf(i)==-1){
 				setPlayed(i,false);
@@ -441,8 +455,14 @@ function init(){
 		}
 	}
 	audio.addEventListener("stalled",function(){
-		console.error("The stream of",music[track].getAttribute('file'),"has stalled!!!");
+		console.warn("The stream of",music[track].getAttribute('file'),"has stalled!!!");
 		showError("This stream has stalled!!!");
+		audio.addEventListener('progress',function fn(e){
+			e.target.removeEventListener(e.type, fn);
+			console.log('This stream has resumed!!!');
+			if(err.textContent=="This stream has stalled!!!")
+				showError(false);
+		},false);
 	},false);
 	audio.addEventListener("error",function(e){
 		console.error(
@@ -537,6 +557,7 @@ function init(){
 			audioUI.state.textContent=String.fromCharCode(9654);
 			audioUI.state.title="Play";
 		},false);
+		sendEvt(audio,'pause');// this is for chrome
 		audio.addEventListener('play',function(){
 			audioUI.state.textContent=String.fromCharCode(10074,10074);
 			audioUI.state.title="Pause";
@@ -618,14 +639,11 @@ function init(){
 		},false)
 	}
 	getId('next').addEventListener("click",function(){
-		if(spam.block) return spam.warn();
-		spam.lock();
+		if(spam.lock()) return;
 		sendEvt(audio,'ended');
-		spam.clear();
 	},false);
 	getId('back').addEventListener("click",function(){
-		if(spam.block) return spam.warn();
-		spam.lock();
+		if(spam.lock()) return;
 		if(hst.indx==0){
 			log('History:',hst.indx,'-',hst.log);
 			return alert('Out of History');
@@ -639,7 +657,6 @@ function init(){
 		log('History:',hst.indx,'-',hst.log);
 		hst.nav=false;
 		sendEvt(music[hst.log[hst.indx]],'click');
-		spam.clear();
 	},false);
 	getId('wipe').addEventListener("click",function(){
 		if(music.length==unPlayed.length){
@@ -677,6 +694,7 @@ function init(){
 	}
 	track=config.track>music.length-1?0:config.track;
 	if(config.time==0&&track==0){
+		hst.indx--;
 		sendEvt(audio,'ended');
 	}
 	else{
@@ -762,6 +780,7 @@ function init(){
                                 li.textContent=txt.substr(0,loc);
 				spn=document.createElement('span');
 				spn.textContent=res;
+				if(music[i].hasAttribute('played')) li.setAttribute('played','yes');
 				if(cmp) li.title=music[i].getAttribute('file').substr(len);
 				li.appendChild(spn);
 				li.appendChild(document.createTextNode(txt.substr(loc+res.length)));
@@ -776,7 +795,6 @@ function init(){
 
 	hst.debug=getId('debugHst');// Real time debug for queue/history (well as close as 10 FPS is)
 	if(hst.debug){
-		hst.debug.style.width='320px';
 		hst.debugHst=function(e){
 			e.textContent='hst.indx = '+hst.indx;
 			for(var i in hst.log){
@@ -787,7 +805,7 @@ function init(){
 		}
 		log=console.log;
 		hst.debugHst(hst.debug);
-		playlist.setAttribute('style','max-height:60px;min-height:30px;');// Let me see what I'm doing
+		playlist.setAttribute('style','max-height:120px;min-height:60px;');// Let me see what I'm doing
 	}
 }
 window.onresize=function(){// This is to prevent a vertical scroll bar, well untill the min height comes into play

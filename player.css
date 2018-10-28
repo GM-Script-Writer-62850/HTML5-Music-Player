@@ -1,6 +1,18 @@
-html,body{
+@font-face{
+	/*
+	* Striped down to the 3 characters I am using
+	* https://github.com/iconic/open-iconic 
+	*/
+	font-family: Open Iconic Volume;
+	src: url('data:font/truetype;base64,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');
+}
+*:not(input){
 	margin:0;
 	padding:0;
+}
+hr{
+	margin-top:8px;
+	margin-bottom:8px;
 }
 body{
 	background:#383838;
@@ -25,10 +37,11 @@ body > div{
 	flex-wrap:wrap;
 	justify-content:flex-start;
 	box-sizing:border-box;
+	margin-top:10px;
 }
-#player{
+body > div:not(#tab_container),
+#tab_content > div{
 	padding:10px;
-	margin:10px 0;
 }
 #player > div{
 	display:inline-block;
@@ -81,6 +94,9 @@ body > div{
 	border:1px solid #1c252b;
 	border-radius:10px;
 	outline:none;
+}
+select option{
+	background-color:#383838;
 }
 #player input[type="button"]:hover,
 #player input[type="button"]:focus,
@@ -137,10 +153,10 @@ body > div{
 #player #audioUI{
 	display:flex;
 	flex:none;
-	width:100%;
+	padding:8px 2px;
+	width:calc(100% - 4px);
 	background:#272525;
 	border-radius:4px;
-	padding:8px 2px;
 	align-items:center;
 	height:15px;
 	-moz-user-select:none;
@@ -159,25 +175,17 @@ body > div{
 	color:gray;
 	transition:color 0.25s;
 }
-#player #audioUI > span[id]:hover,
-#player #audioUI > span[id]:active{
+#audioUI > span[id]:hover,
+#audioUI > span[id]:active{
 	color:white;
 }
-@font-face{
-	/*
-	* Striped down to the 3 characters I am using
-	* https://github.com/iconic/open-iconic 
-	*/
-	font-family: Open Iconic Volume;
-	src: url('data:font/truetype;base64,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');
-}
-#player #audioUI #mute{
+#audioUI #mute{
 	/* font-family:Segoe UI Symbol, Symbola, Quivira, Segoe UI Emoji, EmojiOne Mozilla; */
 	font-family:Open Iconic Volume;
 	min-width:22px;
 	text-align:left;
 }
-#player #audioUI input{
+#audioUI input{
 	appearance:none;
 	-moz-appearance:none;
 	-webkit-appearance:none;
@@ -189,44 +197,6 @@ body > div{
 }
 #player #audioUI input::-moz-focus-outer{
 	border:0;
-}
-#player #audioUI input::-moz-range-thumb{
-	transition:background-color 0.25s;
-	background-color:#999;
-	border:none;
-	border-radius:50%;
-	cursor:ew-resize;
-	width:15px;
-	height:15px;
-}
-#player #audioUI input::-moz-range-thumb:hover{
-	background-color:white;
-}
-#player #audioUI input::-moz-range-track{	
-	background-color:#999;
-	border-radius:3px;
-	height:3px;
-	border:none;
-}
-#player #audioUI input::-webkit-slider-runnable-track{
-	background-color:#999;
-	border-radius:3px;
-	height:3px;
-	border:none;
-}
-#player #audioUI input::-webkit-slider-thumb{
-	-webkit-appearance:none;
-	transition:background-color 0.25s;
-	background-color:#999;
-	border:none;
-	border-radius:50%;
-	cursor:ew-resize;
-	width:15px;
-	height:15px;
-	margin-top:-6px;
-}
-#player #audioUI input::-webkit-slider-thumb:hover{
-	background-color:white;
 }
 #player #audioUI input::-ms-track{
 	height:3px;
@@ -277,7 +247,9 @@ body > div{
 	background-position:calc(100% - 5px) center,top left;
 	background-repeat:no-repeat;
 	background-size:13px,auto; 
+	appearance:none;
 	-moz-appearance:none;
+	-webkit-appearance:none;
 }
 #tab_container #find select{
 	margin-top:5px;
@@ -295,7 +267,7 @@ body > div{
 	margin-left:4px;
 	text-align:left;
 }
-#tabs div{
+#tabs > div{
 	display:inline-block;
 	margin:0 0 0 3px;
 	padding:5px 10px;
@@ -312,16 +284,15 @@ body > div{
 	min-height:160px;
 	border-radius:5px;
 	width:100%;
-	padding:5px;
 	box-sizing:border-box;
 	text-align:left;
 	overflow:auto;
 }
-#playlist{
-	text-align:left;
+#playlist{/* It just does not look right to me */
+	padding-top:0!important;
+	padding-bottom:0!important;
 }
 #playlist > ul{
-	margin:0 0 4px 4px;
 	cursor:pointer;
 	width:100%;
 }
@@ -349,7 +320,7 @@ body > div{
 #playlist .folder,
 #playlist .folder.open,
 #playlist .song{
-	 background-position:left 2px;
+	background-position:left 2px;
 }
 #playlist .folder{
 	background-image:url(/icons/folder.png);
@@ -361,18 +332,18 @@ body > div{
 #find #search li{
 	background-image:url(/icons/sound2.png);
 }
-#playlist li[played]:before{
+li[played]:before{
 	content:"\2714  ";
 	color:aqua; /* http://i.imgur.com/2pLPx59.jpg */
 	font-style:normal;
 }
 #playlist li{
-	font-style:italic;
-	color:lime;
-}
-#playlist li:not(.playing){
 	font-style:normal;
 	color:white;
+}
+#playlist li.playing{
+	font-style:italic;
+	color:lime;
 }
 #find form > span{
 	display:inline-block;
@@ -411,6 +382,7 @@ body > div{
 }
 #hst ol{
 	margin:5px 0 0;
+	padding-left:40px;
 }
 @media (max-width:1150px){
 	body > div{
@@ -428,9 +400,12 @@ body > div{
 	}
 }
 @media (max-width:750px){
-	#player{
+	body > div{
 		margin-top:5px;
-		margin-bottom:5px;
+	}
+	body > div:not(#tab_container),
+	#tab_content > div{
+		padding:5px;
 	}
 }
 @media (max-width:690px){
@@ -484,8 +459,10 @@ body > div{
 	}
 }
 @media (max-width:320px){
+	body > div{
+		margin:0;
+	}
 	#player{
-		margin-top:0;
 		margin-bottom:2px;
 	}
 	body > br{
